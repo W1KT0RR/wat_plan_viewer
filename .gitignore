@@ -1,0 +1,9 @@
+node_modules/
+otherappdump/
+*.htm
+WEL24EQ3S1.html
+WEL24EQ3S1_files/
+PLAN.md
+package.json
+package-lock.json
+.claude/

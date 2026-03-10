@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Zajęć WAT</title>
+    <style>
+        :root {
+            --bg: #0f1117; --card: #1a1d27; --card2: #1f2233;
+            --text: #e4e4e7; --text-muted: #9ca3af; --text-dim: #6b7280;
+            --border: #2d3348; --accent: #6366f1; --accent-light: #818cf8;
+            --today-bg: #1e2940; --last-border: #f59e0b; --now-color: #22d3ee;
+            --green: #34d399; --red: #f87171;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+        ::-webkit-scrollbar { width:6px; height:6px; } ::-webkit-scrollbar-track { background:var(--bg); } ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+
+        /* LOADER */
+        #loader { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; padding:2rem; text-align:center; }
+        #loader h1 { font-size:1.8rem; margin-bottom:.5rem; } #loader p { color:var(--text-muted); margin-bottom:2rem; }
+        #loader .status { color:var(--accent-light); margin-bottom:1.5rem; font-size:.9rem; }
+        .drop-zone { border:2px dashed var(--border); border-radius:16px; padding:3rem 2rem; max-width:500px; width:100%; cursor:pointer; transition:all .2s; }
+        .drop-zone:hover,.drop-zone.drag-over { border-color:var(--accent); background:rgba(99,102,241,.05); }
+        .drop-zone input { display:none; } .drop-zone .icon { font-size:3rem; margin-bottom:1rem; }
+        .fetch-form { max-width:500px; width:100%; margin-bottom:1rem; }
+        .form-row { display:flex; gap:.5rem; margin-bottom:.5rem; }
+        .form-row input, .form-row select { flex:1; padding:.6rem .8rem; background:var(--card); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:.9rem; outline:none; font-family:inherit; }
+        .form-row input:focus, .form-row select:focus { border-color:var(--accent); }
+        .form-row select { flex:0 0 auto; min-width:130px; cursor:pointer; }
+        .form-row select option { background:var(--card); color:var(--text); }
+        .fetch-btn { width:100%; padding:.65rem; background:var(--accent); border:none; border-radius:8px; color:#fff; font-size:.95rem; font-weight:600; cursor:pointer; transition:background .15s; font-family:inherit; }
+        .fetch-btn:hover { background:var(--accent-light); }
+        .fetch-btn:disabled { opacity:.5; cursor:not-allowed; }
+        .divider { color:var(--text-dim); font-size:.8rem; margin:1.2rem 0; position:relative; text-align:center; }
+        .divider::before,.divider::after { content:''; position:absolute; top:50%; width:calc(50% - 2.5rem); height:1px; background:var(--border); }
+        .divider::before { left:0; } .divider::after { right:0; }
+        .error-msg { color:var(--red); font-size:.8rem; margin-top:.5rem; text-align:center; }
+        .share-btn { background:none; border:1px solid var(--border); color:var(--text-muted); padding:.2rem .5rem; border-radius:6px; cursor:pointer; font-size:.7rem; transition:all .15s; }
+        .share-btn:hover { border-color:var(--accent); color:var(--accent-light); }
+
+        /* HEADER */
+        header { background:var(--card); border-bottom:1px solid var(--border); padding:.6rem 1rem; position:sticky; top:0; z-index:100; }
+        .header-row { display:flex; align-items:center; justify-content:space-between; max-width:1600px; margin:0 auto; gap:.5rem; flex-wrap:wrap; }
+        .header-title { font-size:.95rem; font-weight:600; white-space:nowrap; }
+        .header-title span { color:var(--accent-light); }
+        .now-info { font-size:.75rem; color:var(--now-color); background:rgba(34,211,238,.08); padding:.25rem .6rem; border-radius:6px; white-space:nowrap; max-width:350px; overflow:hidden; text-overflow:ellipsis; }
+        .nav-controls { display:flex; align-items:center; gap:.4rem; }
+        .nav-btn { background:var(--bg); border:1px solid var(--border); color:var(--text); padding:.35rem .65rem; border-radius:8px; cursor:pointer; font-size:.8rem; transition:background .15s; white-space:nowrap; }
+        .nav-btn:hover { background:var(--card2); }
+        .nav-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+        .nav-btn.today-btn { background:var(--accent); border-color:var(--accent); color:#fff; }
+        .week-label { font-size:.8rem; font-weight:500; min-width:120px; text-align:center; }
+        .week-num { font-size:.65rem; color:var(--text-muted); }
+        .view-toggle { display:flex; gap:2px; background:var(--bg); border-radius:8px; padding:2px; }
+        .view-toggle .nav-btn { border:none; padding:.3rem .6rem; font-size:.75rem; }
+
+        /* LEGEND BAR */
+        .legend-bar { background:var(--card); border-bottom:1px solid var(--border); padding:.4rem 1rem; overflow-x:auto; }
+        .legend-bar-inner { display:flex; gap:.4rem; max-width:1600px; margin:0 auto; flex-wrap:wrap; }
+        .legend-chip { display:inline-flex; align-items:center; gap:.3rem; padding:.15rem .5rem; border-radius:6px; font-size:.7rem; background:var(--bg); border:1px solid var(--border); cursor:pointer; transition:all .15s; flex-shrink:0; }
+        .legend-chip:hover { border-color:var(--accent); transform:scale(1.03); }
+        .legend-dot { width:8px; height:8px; border-radius:2px; flex-shrink:0; }
+
+        /* MAIN */
+        main { max-width:1600px; margin:0 auto; padding:.75rem; }
+
+        /* === WEEK VIEW === */
+        .week-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:.4rem; }
+        .week-grid.has-sunday { grid-template-columns:repeat(7,1fr); }
+        .day-column { background:var(--card); border-radius:10px; overflow:hidden; border:1px solid var(--border); }
+        .day-column.is-today { border-color:var(--accent); box-shadow:0 0 10px rgba(99,102,241,.15); }
+        .day-header { padding:.5rem .6rem; font-weight:600; font-size:.8rem; background:var(--bg); border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+        .day-header .date { color:var(--text-muted); font-weight:400; font-size:.75rem; }
+        .day-column.is-today .day-header { background:var(--today-bg); }
+        .day-slots { padding:.3rem; display:flex; flex-direction:column; gap:.25rem; }
+        .empty-day { padding:1.5rem; text-align:center; color:var(--text-dim); font-size:.75rem; }
+
+        /* === CLASS CARD === */
+        .class-card { border-radius:7px; padding:.4rem .55rem; position:relative; overflow:hidden; transition:transform .1s; border:1px solid transparent; cursor:pointer; }
+        .class-card:hover { transform:scale(1.015); z-index:1; }
+        .class-card.is-now { border:1.5px solid var(--now-color); box-shadow:0 0 8px rgba(34,211,238,.2); }
+        .class-card.is-now::before { content:'TERAZ'; position:absolute; top:2px; right:4px; font-size:.5rem; font-weight:700; color:var(--now-color); letter-spacing:.5px; }
+        .class-card.is-last { border:1.5px solid var(--last-border); box-shadow:0 0 6px rgba(245,158,11,.15); }
+        .class-card .last-badge { position:absolute; top:2px; right:4px; font-size:.5rem; font-weight:700; color:var(--last-border); letter-spacing:.3px; }
+        .class-card .cc-time { font-size:.65rem; font-weight:600; opacity:.85; }
+        .class-card .cc-name { font-size:.75rem; font-weight:600; line-height:1.2; margin:1px 0; }
+        .class-card .cc-meta { font-size:.6rem; opacity:.75; display:flex; flex-wrap:wrap; gap:.15rem .4rem; align-items:center; }
+        .type-badge { display:inline-block; padding:0 3px; border-radius:2px; font-size:.55rem; font-weight:700; background:rgba(0,0,0,.25); text-transform:uppercase; }
+        .half-badge { display:inline-block; padding:0 3px; border-radius:2px; font-size:.55rem; font-weight:700; background:rgba(255,0,0,.3); color:#fca5a5; }
+        .cc-instructor { font-size:.6rem; opacity:.65; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .cc-room { white-space:nowrap; }
+
+        /* === LIST VIEW === */
+        .list-view { display:flex; flex-direction:column; gap:.6rem; }
+        .list-day-header { font-size:.95rem; font-weight:600; padding:.4rem 0; border-bottom:1px solid var(--border); margin-bottom:.4rem; display:flex; justify-content:space-between; }
+        .list-day-header .date-info { color:var(--text-muted); font-weight:400; font-size:.85rem; }
+        .list-cards { display:flex; flex-direction:column; gap:.3rem; }
+        .list-card { display:grid; grid-template-columns:75px 1fr; gap:.6rem; border-radius:9px; padding:.55rem .75rem; border:1px solid transparent; align-items:start; cursor:pointer; }
+        .list-card.is-last { border:1.5px solid var(--last-border); box-shadow:0 0 6px rgba(245,158,11,.15); position:relative; }
+        .list-card .last-badge-list { position:absolute; top:-7px; right:8px; font-size:.5rem; font-weight:700; color:var(--last-border); background:var(--bg); padding:0 3px; letter-spacing:.3px; }
+        .list-card.is-now { border:1.5px solid var(--now-color); box-shadow:0 0 8px rgba(34,211,238,.2); position:relative; }
+        .list-card .now-badge-list { position:absolute; top:-7px; right:8px; font-size:.5rem; font-weight:700; color:var(--now-color); background:var(--bg); padding:0 3px; }
+        .list-card .time-col { text-align:center; font-size:.8rem; font-weight:600; line-height:1.3; }
+        .list-card .time-col .slot-num { font-size:.65rem; color:var(--text-muted); }
+        .list-card .info-col .name { font-size:.9rem; font-weight:600; }
+        .list-card .info-col .details { font-size:.75rem; opacity:.8; margin-top:2px; display:flex; flex-wrap:wrap; gap:.2rem .5rem; }
+        .list-card .info-col .instructor { font-size:.7rem; color:var(--text-muted); margin-top:2px; }
+
+        /* === MONTH VIEW === */
+        .month-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
+        .month-day-cell { background:var(--card); border-radius:6px; min-height:70px; border:1px solid var(--border); overflow:hidden; cursor:pointer; transition:border-color .15s; }
+        .month-day-cell:hover { border-color:var(--accent-light); }
+        .month-day-cell.is-today { border-color:var(--accent); box-shadow:0 0 8px rgba(99,102,241,.15); }
+        .month-day-cell.is-empty { opacity:.3; cursor:default; }
+        .month-day-cell.is-empty:hover { border-color:var(--border); }
+        .month-day-label { font-size:.65rem; font-weight:600; padding:3px 5px; display:flex; justify-content:space-between; color:var(--text-muted); }
+        .month-day-label .day-name { font-size:.55rem; }
+        .month-day-classes { padding:1px 3px 3px; display:flex; flex-direction:column; gap:1px; }
+        .month-class-pip { border-radius:2px; padding:1px 4px; font-size:.5rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3; }
+        .month-header-row { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; margin-bottom:3px; }
+        .month-header-cell { text-align:center; font-size:.7rem; font-weight:600; color:var(--text-muted); padding:.3rem 0; }
+        .month-nav { display:flex; align-items:center; gap:.5rem; margin-bottom:.5rem; }
+
+        /* === SUBJECT DETAIL MODAL === */
+        .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:200; display:none; justify-content:center; align-items:start; padding:2rem 1rem; overflow-y:auto; }
+        .modal-overlay.open { display:flex; }
+        .modal { background:var(--card); border-radius:14px; max-width:700px; width:100%; border:1px solid var(--border); max-height:85vh; overflow-y:auto; }
+        .modal-header { padding:1rem 1.2rem; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; background:var(--card); z-index:1; border-radius:14px 14px 0 0; }
+        .modal-header h2 { font-size:1.1rem; }
+        .modal-header .close-btn { background:none; border:none; color:var(--text-muted); font-size:1.4rem; cursor:pointer; padding:.2rem .4rem; }
+        .modal-body { padding:1rem 1.2rem; }
+        .modal-section { margin-bottom:1rem; }
+        .modal-section h3 { font-size:.85rem; color:var(--text-muted); margin-bottom:.4rem; text-transform:uppercase; letter-spacing:.5px; }
+        .instructor-list { display:flex; flex-direction:column; gap:.25rem; }
+        .instructor-item { display:flex; justify-content:space-between; align-items:center; padding:.3rem .5rem; background:var(--bg); border-radius:6px; font-size:.8rem; }
+        .instructor-item .type { font-size:.65rem; font-weight:600; padding:1px 5px; border-radius:3px; background:rgba(255,255,255,.1); }
+        .subject-calendar { display:flex; flex-direction:column; gap:.2rem; }
+        .subject-cal-entry { display:flex; align-items:center; gap:.5rem; padding:.25rem .5rem; border-radius:5px; font-size:.75rem; }
+        .subject-cal-entry .cal-date { min-width:80px; font-weight:600; color:var(--text-muted); }
+        .subject-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem; }
+        .stat-box { background:var(--bg); border-radius:8px; padding:.5rem; text-align:center; }
+        .stat-box .val { font-size:1.2rem; font-weight:700; }
+        .stat-box .lbl { font-size:.65rem; color:var(--text-muted); }
+
+        /* PROGRESS BAR in class card for "now" */
+        .now-progress { height:2px; background:rgba(34,211,238,.2); border-radius:1px; margin-top:3px; }
+        .now-progress-bar { height:100%; background:var(--now-color); border-radius:1px; transition:width 60s linear; }
+
+        /* MOBILE */
+        @media(max-width:1100px) { .week-grid { grid-template-columns:repeat(3,1fr); } }
+        @media(max-width:750px) {
+            .week-grid,.month-grid,.month-header-row { grid-template-columns:1fr; }
+            .month-day-cell { min-height:auto; }
+            .header-row { gap:.3rem; } .week-label { min-width:auto; font-size:.75rem; }
+            .nav-btn { padding:.3rem .5rem; font-size:.75rem; }
+            header { padding:.4rem .5rem; } main { padding:.4rem; }
+            .now-info { max-width:200px; font-size:.65rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="loader">
+    <h1>Plan Zajec WAT</h1>
+    <p>Wpisz nazwe grupy aby pobrac plan z serwera</p>
+    <div id="autoLoadStatus" class="status"></div>
+    <div class="fetch-form">
+        <div class="form-row">
+            <input type="text" id="groupInput" placeholder="Nazwa grupy, np. WEL24EQ3S1" spellcheck="false" autocomplete="off">
+            <select id="semesterSelect">
+                <option value="lato">Letni</option>
+                <option value="zima">Zimowy</option>
+            </select>
+        </div>
+        <button class="fetch-btn" id="fetchBtn">Pobierz plan</button>
+        <div id="fetchError" class="error-msg" style="display:none"></div>
+    </div>
+    <div class="divider">lub</div>
+    <div class="drop-zone" id="dropZone">
+        <div class="icon">&#128197;</div>
+        <div class="label">Przeciagnij plik HTML lub kliknij</div>
+        <input type="file" id="fileInput" accept=".html,.htm">
+    </div>
+</div>
+
+<div id="app" style="display:none;">
+    <header>
+        <div class="header-row">
+            <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;">
+                <div class="header-title">Plan <span id="groupName"></span></div>
+                <button class="share-btn" id="shareBtn" style="display:none">Udostepnij</button>
+                <div class="now-info" id="nowInfo"></div>
+            </div>
+            <div class="nav-controls">
+                <button class="nav-btn today-btn" id="todayBtn">Dzis</button>
+                <button class="nav-btn" id="prevBtn">&#9664;</button>
+                <div style="text-align:center">
+                    <div class="week-label" id="weekLabel"></div>
+                    <div class="week-num" id="weekNum"></div>
+                </div>
+                <button class="nav-btn" id="nextBtn">&#9654;</button>
+            </div>
+            <div class="view-toggle">
+                <button class="nav-btn active" data-view="week">Tydzien</button>
+                <button class="nav-btn" data-view="list">Lista</button>
+                <button class="nav-btn" data-view="month">Miesiac</button>
+            </div>
+        </div>
+    </header>
+    <div class="legend-bar">
+        <div class="legend-bar-inner" id="legendBar"></div>
+    </div>
+    <main id="scheduleContainer"></main>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+// ============================================================
+// CONSTANTS
+// ============================================================
+const TIME_SLOTS = {
+    '1-2':  {s:'8:00', e:'9:35',  sm:480, em:575},
+    '3-4':  {s:'9:50', e:'11:25', sm:590, em:685},
+    '5-6':  {s:'11:40',e:'13:15', sm:700, em:795},
+    '7-8':  {s:'13:30',e:'15:05', sm:810, em:905},
+    '9-10': {s:'15:45',e:'17:20', sm:945, em:1040},
+    '11-12':{s:'17:35',e:'19:10', sm:1055,em:1150},
+    '13-14':{s:'19:25',e:'21:00', sm:1165,em:1260}
+};
+const SLOT_KEYS = ['1-2','3-4','5-6','7-8','9-10','11-12','13-14'];
+const DAY_NAMES = ['Poniedzialek','Wtorek','Sroda','Czwartek','Piatek','Sobota','Niedziela'];
+const DAY_SHORT = ['Pon','Wt','Sr','Czw','Pt','Sob','Ndz'];
+const MONTH_MAP = {'I':1,'II':2,'III':3,'IV':4,'V':5,'VI':6,'VII':7,'VIII':8,'IX':9,'X':10,'XI':11,'XII':12};
+const MONTH_NAMES = ['stycznia','lutego','marca','kwietnia','maja','czerwca','lipca','sierpnia','wrzesnia','pazdziernika','listopada','grudnia'];
+
+// Department base URLs (from WAT Plan Viewer app)
+const DEPARTMENTS = {
+    WEL: { name:'Wydz. Elektroniki', lato:'https://plany.wel.wat.edu.pl/lato', zima:'https://plany.wel.wat.edu.pl/zima' },
+    WLO: { name:'Wydz. Bezp. Logistyki i Zarzadzania', lato:'https://wlo.wat.edu.pl/planzajec/letni', zima:'https://wlo.wat.edu.pl/planzajec/zimowy' },
+    WML: { name:'Wydz. Mechatroniki, Uzbrojenia i Lotnictwa', lato:'https://wml.wat.edu.pl/wp-content/uploads/rozklady_zajec/2024_sem_lato', zima:'https://wml.wat.edu.pl/wp-content/uploads/rozklady_zajec/2024_sem_zima' },
+    IOE: { name:'Instytut Optoelektroniki', lato:'https://ioe.wat.edu.pl/plany/lato', zima:'https://ioe.wat.edu.pl/plany/lato' },
+    WTC: { name:'Wydz. Nowych Technologii i Chemii', lato:'https://www.wtc.wat.edu.pl/Plany', zima:'https://www.wtc.wat.edu.pl/Plany' },
+    WIM: { name:'Wydz. Inzynierii Mechanicznej', lato:'https://www.wim.wat.edu.pl/wp-content/uploads/rozklady/lato', zima:'https://www.wim.wat.edu.pl/wp-content/uploads/rozklady/zima' }
+};
+
+const CORS_PROXIES = [
+    url => 'https://corsproxy.io/?' + encodeURIComponent(url),
+    url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
+    url => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url)
+];
+
+function detectDepartment(groupName) {
+    const upper = groupName.toUpperCase();
+    for (const key of Object.keys(DEPARTMENTS)) {
+        if (upper.startsWith(key)) return DEPARTMENTS[key];
+    }
+    return null;
+}
+
+function getDefaultSemester() {
+    const month = new Date().getMonth() + 1;
+    return (month >= 2 && month <= 8) ? 'lato' : 'zima';
+}
+
+async function fetchPlanFromWAT(groupName, semester) {
+    const dept = detectDepartment(groupName);
+    if (!dept) throw new Error('Nieznany wydzial dla grupy "' + groupName + '". Sprobuj zaladowac plik recznie.');
+    const baseUrl = dept[semester];
+    if (!baseUrl) throw new Error('Brak URL dla semestru: ' + semester);
+    const planUrl = baseUrl + '/' + groupName + '.htm';
+
+    const errors = [];
+    for (let i = 0; i < CORS_PROXIES.length; i++) {
+        const proxyUrl = CORS_PROXIES[i](planUrl);
+        try {
+            const ctrl = new AbortController();
+            const timer = setTimeout(() => ctrl.abort(), 12000);
+            const resp = await fetch(proxyUrl, { signal: ctrl.signal });
+            clearTimeout(timer);
+            if (!resp.ok) { errors.push('HTTP ' + resp.status); continue; }
+            const buf = await resp.arrayBuffer();
+            const html = new TextDecoder('windows-1250').decode(buf);
+            if (html.includes('<table') || html.includes('<TABLE')) return html;
+            errors.push('Odpowiedz nie zawiera tabeli');
+        } catch (e) {
+            errors.push(e.name === 'AbortError' ? 'Timeout' : e.message);
+        }
+    }
+    throw new Error('Nie udalo sie pobrac planu (' + errors.join('; ') + '). Sprawdz nazwe grupy lub zaladuj plik recznie.');
+}
+
+function getTypeName(t) {
+    const map = {'w':'Wyklad','W':'Wyklad','L':'Lab','S':'Seminarium','P':'Projekt','E':'Egzamin','Ep':'Egz.popr.','Z':'Zaliczenie','Zp':'Zal.popr.'};
+    if (map[t]) return map[t];
+    if (t && (t.toLowerCase().startsWith('\u0107') || t.toLowerCase().startsWith('c'))) return 'Cwiczenia';
+    return t || '?';
+}
+
+function getTypeShort(t) {
+    const map = {'w':'W','W':'W','L':'L','S':'S','P':'P','E':'E'};
+    if (map[t]) return map[t];
+    if (t && (t.toLowerCase().startsWith('\u0107') || t.toLowerCase().startsWith('c'))) return 'Cw';
+    return t || '?';
+}
+
+// ============================================================
+// PARSER
+// ============================================================
+function buildVirtualGrid(table) {
+    const rows = table.rows, grid = [], rsMap = {};
+    for (let r = 0; r < rows.length; r++) {
+        grid[r] = [];
+        const cells = rows[r].cells;
+        let col = 0, ci = 0;
+        while (ci < cells.length) {
+            while (rsMap[r+','+col]) { grid[r][col] = rsMap[r+','+col]; delete rsMap[r+','+col]; col++; }
+            const td = cells[ci], cs = parseInt(td.getAttribute('colspan'))||1, rs = parseInt(td.getAttribute('rowspan'))||1;
+            for (let c = 0; c < cs; c++) {
+                grid[r][col+c] = {el:td, spanned:c>0, fromRS:false};
+                for (let rr = 1; rr < rs; rr++) rsMap[(r+rr)+','+(col+c)] = {el:td, spanned:c>0, fromRS:true};
+            }
+            col += cs; ci++;
+        }
+        while (rsMap[r+','+col]) { grid[r][col] = rsMap[r+','+col]; delete rsMap[r+','+col]; col++; }
+    }
+    return grid;
+}
+
+function parseDate(s, year) {
+    const m = s.trim().match(/^(\d{1,2})\s+([IVX]+)$/);
+    if (!m) return null;
+    const mo = MONTH_MAP[m[2]];
+    return mo ? new Date(year, mo-1, parseInt(m[1])) : null;
+}
+
+function extractCellClass(el) {
+    if (!el) return null;
+    const bg = el.getAttribute('background')||'';
+    if (bg.includes('reservation')||bg.includes('outofrange')) return null;
+    const bgcolor = el.getAttribute('bgcolor');
+    if (!bgcolor || bgcolor.toLowerCase()==='silver') return null;
+    const lines = [];
+    (function walk(n) {
+        if (n.nodeType===3) { const t=n.textContent.trim(); if (t&&t!=='\u00a0') lines.push(t); }
+        else { for (const c of n.childNodes) walk(c); if (n.tagName==='BR') lines.push('\n'); }
+    })(el);
+    const parts = lines.join('').split('\n').map(s=>s.trim()).filter(Boolean);
+    if (parts.length < 2) return null;
+    let half=false, idx=0;
+    if (parts[0]==='50%') { half=true; idx=1; }
+    return { code:parts[idx]||'', type:parts[idx+1]||'', room:parts[idx+2]||'', color:bgcolor, halfGroup:half };
+}
+
+function parseRoom(roomStr) {
+    if (!roomStr) return '';
+    const entries = roomStr.split(';').map(s=>s.trim()).filter(Boolean);
+    const byBld = {};
+    for (const e of entries) {
+        const tok = e.split(/\s+/);
+        // Building codes are short (1-4 chars): 45, S, K, 54E, 136 etc.
+        // Room numbers contain digits or are short: 2, 315, aE, 3.7, 032
+        // Skip entries like "Laptop WCY" where room part is a long word without digits
+        const bldCandidate = tok.length>=2 ? tok[tok.length-1] : '';
+        const rmCandidate = tok.length>=2 ? tok.slice(0,-1).join(' ') : '';
+        const rmValid = rmCandidate && (/\d/.test(rmCandidate) || rmCandidate.length <= 3);
+        if (tok.length >= 2 && bldCandidate.length <= 4 && rmValid) {
+            const bld = tok[tok.length-1], rm = tok.slice(0,-1).join(' ');
+            if (!byBld[bld]) byBld[bld] = [];
+            byBld[bld].push(rm);
+        } else {
+            if (!byBld['?']) byBld['?'] = [];
+            byBld['?'].push(e);
+        }
+    }
+    return Object.entries(byBld).filter(([b])=>b!=='?').map(([b,rs]) => `bud.${b} s.${rs.join('/')}`).join(' | ')
+        + (byBld['?'] ? (Object.keys(byBld).length>1?' | ':'') + byBld['?'].join(', ') : '');
+}
+
+function parseRoomShort(roomStr) {
+    if (!roomStr) return '';
+    const tok = roomStr.split(';')[0].trim().split(/\s+/);
+    if (tok.length >= 2) return `s.${tok.slice(0,-1).join(' ')} b.${tok[tok.length-1]}`;
+    return roomStr.split(';')[0].trim();
+}
+
+function extractInstructors(grid) {
+    let currentSubj = null;
+    const result = {};
+    for (let r = 0; r < grid.length; r++) {
+        const row = grid[r];
+        const nc = row.length;
+        if (nc < 4) continue;
+        const codeCell = row[nc-2], nameCell = row[nc-1];
+        if (!codeCell || !codeCell.el) continue;
+        const el = codeCell.el;
+        const mw = el.getAttribute('mergewith');
+        if (!mw) continue;
+        const bgc = el.getAttribute('bgcolor');
+        if (bgc && bgc.toLowerCase()!=='silver') {
+            // Subject header
+            const code = el.textContent.trim();
+            if (code && code.length < 15 && !/\s/.test(code)) { currentSubj = code; if (!result[code]) result[code] = {}; }
+        } else if (currentSubj && !bgc) {
+            // Instructor entry: first cell = "type hours", second = name
+            const th = el.textContent.trim();
+            const name = (nameCell && nameCell.el) ? nameCell.el.textContent.trim() : '';
+            if (name && th) {
+                const tp = th.split(/\s+/);
+                const type = tp[0], hours = tp[1]||'';
+                if (!result[currentSubj][type]) result[currentSubj][type] = [];
+                // Avoid duplicates
+                if (!result[currentSubj][type].some(i=>i.name===name && i.type===type))
+                    result[currentSubj][type].push({name, hours, type});
+            }
+        }
+    }
+    return result;
+}
+
+function parseScheduleHTML(htmlString) {
+    const doc = new DOMParser().parseFromString(htmlString, 'text/html');
+    const table = doc.querySelector('table');
+    if (!table) throw new Error('Nie znaleziono tabeli');
+    const grid = buildVirtualGrid(table);
+    if (grid.length < 10) throw new Error('Tabela za mala');
+
+    let year = 2026;
+    const bt = doc.body.textContent||'';
+    const ym = bt.match(/(\d{4})\/(\d{4})/);
+    if (ym) year = parseInt(ym[2]);
+
+    let groupName = '';
+    const gm = bt.match(/GRUPY\s+(\S+)/);
+    if (gm) groupName = gm[1];
+
+    // Subject legend
+    const subjects = {};
+    doc.querySelectorAll('td[mergewith]').forEach(td => {
+        const mw = td.getAttribute('mergewith'), bgc = td.getAttribute('bgcolor');
+        const nm = mw.match(/>([^<]+)</);
+        if (nm && bgc && bgc.toLowerCase()!=='silver') {
+            const code = td.textContent.trim();
+            if (code && code.length < 15 && !/\s/.test(code))
+                subjects[code] = {name:nm[1].trim(), color:bgc};
+        }
+    });
+
+    // Instructors
+    const instructors = extractInstructors(grid);
+
+    // Find day starts (rowspan=8) - only the FIRST row, not fromRS propagated rows
+    const dayStarts = [];
+    for (let r = 0; r < grid.length; r++) {
+        if (grid[r][0] && grid[r][0].el && !grid[r][0].fromRS) {
+            const rs = parseInt(grid[r][0].el.getAttribute('rowspan'))||1;
+            if (rs === 8) dayStarts.push(r);
+        }
+    }
+
+    const allClasses = [];
+
+    dayStarts.forEach((startRow, dayIdx) => {
+        const dateRow = grid[startRow];
+        const dayFull = DAY_NAMES[dayIdx] || 'Dzien '+(dayIdx+1);
+        const numCols = dateRow.length, dataStart = 2, dataEnd = numCols - 2;
+
+        const dates = [];
+        for (let c = dataStart; c < dataEnd; c++) {
+            const cell = dateRow[c];
+            dates.push(cell && cell.el ? parseDate(cell.el.textContent.trim(), year) : null);
+        }
+
+        // Process each time slot independently - NO rowspan merging
+        for (let s = 0; s < 7; s++) {
+            const rowIdx = startRow + 1 + s;
+            if (rowIdx >= grid.length) break;
+            const row = grid[rowIdx];
+            const slotKey = SLOT_KEYS[s], time = TIME_SLOTS[slotKey];
+
+            const processedEls = new Set();
+            for (let c = dataStart; c < dataEnd && c < row.length; c++) {
+                const cell = row[c];
+                if (!cell || !cell.el || processedEls.has(cell.el)) continue;
+
+                const ci = extractCellClass(cell.el);
+                if (!ci) continue;
+                processedEls.add(cell.el);
+
+                // Find colspan range in THIS row
+                let colEnd = c;
+                for (let cc = c+1; cc < dataEnd && cc < row.length; cc++) {
+                    if (row[cc] && row[cc].el === cell.el) colEnd = cc; else break;
+                }
+
+                const subj = subjects[ci.code] || {name:ci.code, color:ci.color};
+                const instr = instructors[ci.code] && instructors[ci.code][ci.type];
+                const instrNames = instr ? instr.map(i=>i.name) : [];
+
+                for (let cc = c; cc <= colEnd; cc++) {
+                    const wi = cc - dataStart;
+                    if (wi >= 0 && wi < dates.length && dates[wi]) {
+                        allClasses.push({
+                            date: dates[wi],
+                            dayFull, dayIdx,
+                            slot: slotKey,
+                            timeStart: time.s, timeEnd: time.e,
+                            timeStartMin: time.sm, timeEndMin: time.em,
+                            code: ci.code, name: subj.name,
+                            type: ci.type, typeName: getTypeName(ci.type),
+                            typeShort: getTypeShort(ci.type),
+                            room: ci.room, roomDisplay: parseRoom(ci.room), roomShort: parseRoomShort(ci.room),
+                            color: subj.color || ci.color,
+                            halfGroup: ci.halfGroup,
+                            instructors: instrNames
+                        });
+                    }
+                }
+            }
+        }
+    });
+
+    // Last occurrence per subject+type
+    const lastOcc = {};
+    allClasses.forEach(c => {
+        const key = c.code + '_' + c.type;
+        if (!lastOcc[key] || c.date > lastOcc[key]) lastOcc[key] = c.date;
+    });
+    allClasses.forEach(c => {
+        const key = c.code + '_' + c.type;
+        c.isLast = lastOcc[key] && c.date.getTime() === lastOcc[key].getTime();
+        const typeLabel = {'w':'WYKLAD','L':'LABY','S':'SEMINARIUM','P':'PROJEKT','E':'EGZAMIN'};
+        const mascLabels = new Set(['WYKLAD','PROJEKT','EGZAMIN']);
+        const lbl = typeLabel[c.type] || getTypeName(c.type).toUpperCase();
+        c.lastLabel = c.isLast ? ((mascLabels.has(lbl)?'OSTATNI':'OSTATNIE') + ' ' + lbl) : '';
+    });
+
+    // Build weeks
+    const weekMap = {};
+    allClasses.forEach(c => {
+        const mon = getMonday(c.date), key = mon.toISOString().split('T')[0];
+        if (!weekMap[key]) weekMap[key] = {monday:mon, classes:[]};
+        weekMap[key].classes.push(c);
+    });
+    const weeks = Object.keys(weekMap).sort().map(k => weekMap[k]);
+
+    return {groupName, subjects, instructors, weeks, allClasses};
+}
+
+function getMonday(d) {
+    const r = new Date(d), day = r.getDay(), diff = r.getDate()-day+(day===0?-6:1);
+    r.setDate(diff); r.setHours(0,0,0,0); return r;
+}
+
+// ============================================================
+// TIME TRACKING
+// ============================================================
+function getNowInfo(classes) {
+    const now = new Date(), curMin = now.getHours()*60+now.getMinutes();
+    const today = new Date(now); today.setHours(0,0,0,0);
+
+    const todayClasses = classes ? classes.filter(c => c.date.getTime()===today.getTime())
+        .sort((a,b) => a.timeStartMin-b.timeStartMin) : [];
+
+    // Find current
+    let current = null, progress = 0;
+    for (const c of todayClasses) {
+        if (curMin >= c.timeStartMin && curMin <= c.timeEndMin) {
+            current = c; progress = (curMin-c.timeStartMin)/(c.timeEndMin-c.timeStartMin);
+            break;
+        }
+    }
+
+    // Find next
+    let next = null;
+    for (const c of todayClasses) {
+        if (c.timeStartMin > curMin) { next = c; break; }
+    }
+
+    // Break detection
+    let onBreak = false, breakEnd = '';
+    if (!current && next) {
+        const prev = todayClasses.filter(c => c.timeEndMin <= curMin).pop();
+        if (prev && (next.timeStartMin - curMin) < 30) {
+            onBreak = true;
+            breakEnd = next.timeStart;
+        }
+    }
+
+    // Status for slot
+    let slotStatus = null;
+    for (const k of SLOT_KEYS) {
+        const t = TIME_SLOTS[k];
+        if (curMin >= t.sm && curMin <= t.em) { slotStatus = k; break; }
+    }
+
+    return {current, progress, next, onBreak, breakEnd, slotStatus, today, curMin, todayClasses};
+}
+
+function formatNowInfo(info) {
+    if (!info) return '';
+    if (info.current) {
+        const left = info.current.timeEndMin - info.curMin;
+        return `Teraz: ${info.current.name} ${info.current.typeName} (${left} min do konca)`;
+    }
+    if (info.onBreak) return `Przerwa do ${info.breakEnd}`;
+    if (info.next) {
+        const mins = info.next.timeStartMin - info.curMin;
+        const h = Math.floor(mins/60), m = mins%60;
+        const timeStr = h > 0 ? `${h}h ${m}min` : `${m}min`;
+        return `Nastepne: ${info.next.name} ${info.next.typeName} za ${timeStr}`;
+    }
+    if (info.todayClasses.length === 0) return 'Dzis brak zajec';
+    if (info.curMin > info.todayClasses[info.todayClasses.length-1].timeEndMin) return 'Zajecia na dzis zakonczone';
+    return '';
+}
+
+// ============================================================
+// RENDERER
+// ============================================================
+let data = null, weekIdx = 0, view = 'week', monthOffset = 0, nowInfo = null, currentGroup = '', currentSemester = '';
+
+function init(d) {
+    data = d;
+    document.getElementById('loader').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('groupName').textContent = d.groupName;
+    document.title = 'Plan ' + d.groupName + ' - WAT';
+    if (currentGroup) {
+        document.getElementById('shareBtn').style.display = 'inline-block';
+        document.getElementById('shareBtn').onclick = function() {
+            const url = new URL(window.location);
+            url.searchParams.set('group', currentGroup);
+            url.searchParams.set('sem', currentSemester);
+            navigator.clipboard.writeText(url.toString()).then(() => {
+                const btn = document.getElementById('shareBtn');
+                btn.textContent = 'Skopiowano!';
+                setTimeout(() => { btn.textContent = 'Udostepnij'; }, 2000);
+            });
+        };
+    }
+
+    const today = new Date(); today.setHours(0,0,0,0);
+    const todayMon = getMonday(today);
+    weekIdx = d.weeks.findIndex(w => w.monday.getTime()===todayMon.getTime());
+    if (weekIdx < 0) {
+        let best = Infinity;
+        d.weeks.forEach((w,i) => { const diff=Math.abs(w.monday-todayMon); if(diff<best){best=diff;weekIdx=i;} });
+    }
+
+    renderLegend();
+    setupNav();
+    updateNow();
+    render();
+    setInterval(()=>{ updateNow(); render(); }, 60000);
+}
+
+function updateNow() {
+    nowInfo = getNowInfo(data.allClasses);
+    document.getElementById('nowInfo').textContent = formatNowInfo(nowInfo);
+}
+
+function render() {
+    if (view==='week') renderWeek();
+    else if (view==='list') renderList();
+    else renderMonth();
+    updateNavLabel();
+}
+
+function updateNavLabel() {
+    if (view==='month') {
+        const ref = data.weeks[0] ? new Date(data.weeks[0].monday) : new Date();
+        ref.setMonth(ref.getMonth() + monthOffset);
+        document.getElementById('weekLabel').textContent = MONTH_NAMES[ref.getMonth()] + ' ' + ref.getFullYear();
+        document.getElementById('weekNum').textContent = '';
+    } else {
+        const w = data.weeks[weekIdx];
+        if (!w) return;
+        const mon = w.monday, sun = new Date(mon); sun.setDate(sun.getDate()+6);
+        document.getElementById('weekLabel').textContent = fmtShort(mon)+' - '+fmtShort(sun);
+        document.getElementById('weekNum').textContent = `Tydzien ${weekIdx+1}/${data.weeks.length}`;
+    }
+}
+
+function renderLegend() {
+    const bar = document.getElementById('legendBar');
+    bar.innerHTML = '';
+    Object.keys(data.subjects).sort().forEach(code => {
+        const s = data.subjects[code];
+        const chip = document.createElement('div');
+        chip.className = 'legend-chip';
+        chip.innerHTML = `<div class="legend-dot" style="background:${s.color}"></div><span style="font-weight:600">${code}</span> ${s.name}`;
+        chip.onclick = () => openSubjectModal(code);
+        bar.appendChild(chip);
+    });
+}
+
+// ---------- WEEK VIEW ----------
+function renderWeek() {
+    const w = data.weeks[weekIdx];
+    if (!w) { document.getElementById('scheduleContainer').innerHTML = '<div class="empty-day">Brak danych</div>'; return; }
+    const today = new Date(); today.setHours(0,0,0,0);
+    // Check if this week has Sunday classes
+    const sun = new Date(w.monday); sun.setDate(sun.getDate()+6);
+    const hasSunday = w.classes.some(c=>c.date.getTime()===sun.getTime());
+    const numDays = hasSunday ? 7 : 6;
+    let html = `<div class="week-grid${hasSunday?' has-sunday':''}">`;
+    for (let d = 0; d < numDays; d++) {
+        const dd = new Date(w.monday); dd.setDate(dd.getDate()+d);
+        const isToday = dd.getTime()===today.getTime();
+        const cls = w.classes.filter(c=>c.date.getTime()===dd.getTime()).sort((a,b)=>SLOT_KEYS.indexOf(a.slot)-SLOT_KEYS.indexOf(b.slot));
+        html += `<div class="day-column${isToday?' is-today':''}">`;
+        html += `<div class="day-header"><span>${DAY_NAMES[d]}</span><span class="date">${fmtShort(dd)}</span></div>`;
+        if (!cls.length) html += '<div class="empty-day">Brak zajec</div>';
+        else { html += '<div class="day-slots">'; cls.forEach(c=>{ html += cardSmall(c,isToday); }); html += '</div>'; }
+        html += '</div>';
+    }
+    html += '</div>';
+    document.getElementById('scheduleContainer').innerHTML = html;
+}
+
+function cardSmall(c, isToday) {
+    const bg = hex2rgba(c.color,.18);
+    const isNow = isToday && nowInfo && nowInfo.current && nowInfo.current.slot===c.slot && nowInfo.current.code===c.code;
+    let cls = 'class-card'; if (isNow) cls+=' is-now'; else if (c.isLast) cls+=' is-last';
+    let h = `<div class="${cls}" style="background:${bg}" onclick="openSubjectModal('${c.code}')">`;
+    if (isNow) { /* badge via CSS */ }
+    else if (c.isLast) h += `<div class="last-badge">${c.lastLabel}</div>`;
+    h += `<div class="cc-time">${c.timeStart}-${c.timeEnd}</div>`;
+    h += `<div class="cc-name">${c.name}</div>`;
+    h += `<div class="cc-meta"><span class="type-badge" style="background:${hex2rgba(c.color,.35)}">${c.typeName}</span>`;
+    if (c.halfGroup) h += `<span class="half-badge">50%</span>`;
+    h += `<span class="cc-room">${c.roomShort}</span></div>`;
+    if (c.instructors.length) h += `<div class="cc-instructor">${c.instructors[0]}${c.instructors.length>1?' +'.concat(c.instructors.length-1):''}</div>`;
+    if (isNow) h += `<div class="now-progress"><div class="now-progress-bar" style="width:${Math.round(nowInfo.progress*100)}%"></div></div>`;
+    h += '</div>';
+    return h;
+}
+
+// ---------- LIST VIEW ----------
+function renderList() {
+    const w = data.weeks[weekIdx];
+    if (!w) return;
+    const today = new Date(); today.setHours(0,0,0,0);
+    let html = '<div class="list-view">';
+    for (let d = 0; d < 7; d++) {
+        const dd = new Date(w.monday); dd.setDate(dd.getDate()+d);
+        const isToday = dd.getTime()===today.getTime();
+        const cls = w.classes.filter(c=>c.date.getTime()===dd.getTime()).sort((a,b)=>SLOT_KEYS.indexOf(a.slot)-SLOT_KEYS.indexOf(b.slot));
+        if (!cls.length) continue;
+        html += `<div><div class="list-day-header"><span>${isToday?'&#9679; ':''}${DAY_NAMES[d]}</span><span class="date-info">${fmtLong(dd)}</span></div>`;
+        html += '<div class="list-cards">';
+        cls.forEach(c => {
+            const bg = hex2rgba(c.color,.13);
+            const isNow = isToday && nowInfo && nowInfo.current && nowInfo.current.slot===c.slot && nowInfo.current.code===c.code;
+            let ccls = 'list-card'; if (isNow) ccls+=' is-now'; else if (c.isLast) ccls+=' is-last';
+            html += `<div class="${ccls}" style="background:${bg}" onclick="openSubjectModal('${c.code}')">`;
+            if (isNow) html += '<div class="now-badge-list">TERAZ</div>';
+            else if (c.isLast) html += `<div class="last-badge-list">${c.lastLabel}</div>`;
+            html += `<div class="time-col"><div>${c.timeStart}</div><div style="font-size:.6rem;color:var(--text-dim)">-</div><div>${c.timeEnd}</div><div class="slot-num">(${c.slot})</div></div>`;
+            html += '<div class="info-col">';
+            html += `<div class="name">${c.name}</div>`;
+            html += `<div class="details"><span class="type-badge" style="background:${hex2rgba(c.color,.3)}">${c.typeName}</span>`;
+            if (c.halfGroup) html += `<span class="half-badge">50%</span>`;
+            html += `<span>${c.roomDisplay||c.roomShort}</span></div>`;
+            if (c.instructors.length) html += `<div class="instructor">${c.instructors.join(', ')}</div>`;
+            if (isNow) html += `<div class="now-progress" style="margin-top:4px"><div class="now-progress-bar" style="width:${Math.round(nowInfo.progress*100)}%"></div></div>`;
+            html += '</div></div>';
+        });
+        html += '</div></div>';
+    }
+    if (html==='<div class="list-view">') html += '<div class="empty-day" style="padding:3rem">Brak zajec</div>';
+    html += '</div>';
+    document.getElementById('scheduleContainer').innerHTML = html;
+}
+
+// ---------- MONTH VIEW ----------
+function renderMonth() {
+    const refWeek = data.weeks[0] ? new Date(data.weeks[0].monday) : new Date();
+    const refMonth = new Date(refWeek); refMonth.setMonth(refMonth.getMonth() + monthOffset);
+    const mo = refMonth.getMonth(), yr = refMonth.getFullYear();
+    const today = new Date(); today.setHours(0,0,0,0);
+
+    // Collect all dates in this month that have classes
+    const monthClasses = data.allClasses.filter(c => c.date.getMonth()===mo && c.date.getFullYear()===yr);
+    const byDate = {};
+    monthClasses.forEach(c => {
+        const k = c.date.toISOString().split('T')[0];
+        if (!byDate[k]) byDate[k] = [];
+        byDate[k].push(c);
+    });
+
+    // Build calendar grid
+    const firstDay = new Date(yr, mo, 1);
+    const lastDay = new Date(yr, mo+1, 0);
+    // Find monday of the week containing first day
+    const calStart = getMonday(firstDay);
+
+    let html = '<div class="month-header-row">';
+    DAY_SHORT.forEach(d => { html += `<div class="month-header-cell">${d}</div>`; });
+    html += '</div><div class="month-grid">';
+
+    const cur = new Date(calStart);
+    while (cur <= lastDay || cur.getDay() !== 1) {
+        if (cur > lastDay && cur.getDay() === 1) break;
+        const dayOfWeek = (cur.getDay()+6)%7; // 0=Mon, 6=Sun
+
+        const k = cur.toISOString().split('T')[0];
+        const cls = byDate[k] || [];
+        const isThisMonth = cur.getMonth()===mo;
+        const isTd = cur.getTime()===today.getTime();
+        const isEmpty = !cls.length || !isThisMonth;
+
+        html += `<div class="month-day-cell${isTd?' is-today':''}${isEmpty?' is-empty':''}" ${!isEmpty?`onclick="jumpToDate('${k}')"`:''}>`;
+        html += `<div class="month-day-label"><span>${cur.getDate()}</span><span class="day-name">${DAY_SHORT[dayOfWeek]}</span></div>`;
+
+        if (cls.length && isThisMonth) {
+            html += '<div class="month-day-classes">';
+            const sorted = cls.sort((a,b)=>SLOT_KEYS.indexOf(a.slot)-SLOT_KEYS.indexOf(b.slot));
+            // Show compact pips, max ~7
+            sorted.slice(0,8).forEach(c => {
+                html += `<div class="month-class-pip" style="background:${hex2rgba(c.color,.25)};color:${c.color}">${c.timeStart} ${c.code} ${c.typeShort}</div>`;
+            });
+            if (sorted.length > 8) html += `<div class="month-class-pip" style="color:var(--text-muted)">+${sorted.length-8}</div>`;
+            html += '</div>';
+        }
+        html += '</div>';
+        cur.setDate(cur.getDate()+1);
+    }
+    html += '</div>';
+    document.getElementById('scheduleContainer').innerHTML = html;
+}
+
+window.jumpToDate = function(isoDate) {
+    const target = new Date(isoDate); target.setHours(0,0,0,0);
+    const targetMon = getMonday(target);
+    const idx = data.weeks.findIndex(w => w.monday.getTime()===targetMon.getTime());
+    if (idx >= 0) { weekIdx = idx; view = 'list'; updateViewToggle(); render(); }
+};
+
+// ---------- SUBJECT DETAIL MODAL ----------
+function openSubjectModal(code) {
+    const s = data.subjects[code];
+    if (!s) return;
+    const instr = data.instructors[code] || {};
+    const classes = data.allClasses.filter(c=>c.code===code).sort((a,b)=>a.date-b.date||SLOT_KEYS.indexOf(a.slot)-SLOT_KEYS.indexOf(b.slot));
+    const today = new Date(); today.setHours(0,0,0,0);
+
+    let html = `<div class="modal-header" style="border-left:4px solid ${s.color}">`;
+    html += `<h2>${s.name} <span style="color:var(--text-muted);font-size:.8rem">(${code})</span></h2>`;
+    html += '<button class="close-btn" onclick="closeModal()">&times;</button></div>';
+    html += '<div class="modal-body">';
+
+    // Stats
+    const byType = {};
+    classes.forEach(c => {
+        if (!byType[c.type]) byType[c.type] = {total:0, done:0, remaining:0};
+        byType[c.type].total++;
+        if (c.date < today) byType[c.type].done++;
+        else byType[c.type].remaining++;
+    });
+    html += '<div class="modal-section"><h3>Statystyki</h3><div class="subject-stats">';
+    Object.entries(byType).forEach(([t, st]) => {
+        html += `<div class="stat-box"><div class="val" style="color:${s.color}">${st.total}</div><div class="lbl">${getTypeName(t)} (${st.done} bylo / ${st.remaining} zostalo)</div></div>`;
+    });
+    html += '</div></div>';
+
+    // Instructors
+    const instrTypes = Object.keys(instr);
+    if (instrTypes.length) {
+        html += '<div class="modal-section"><h3>Prowadzacy</h3><div class="instructor-list">';
+        instrTypes.forEach(t => {
+            instr[t].forEach(i => {
+                html += `<div class="instructor-item"><span>${i.name}</span><span class="type">${getTypeName(t)} (${i.hours}h)</span></div>`;
+            });
+        });
+        html += '</div></div>';
+    }
+
+    // Calendar
+    html += '<div class="modal-section"><h3>Kalendarz zajec</h3><div class="subject-calendar">';
+    let lastDateStr = '';
+    classes.forEach(c => {
+        const ds = fmtLong(c.date);
+        const isPast = c.date < today;
+        const bg = hex2rgba(c.color, isPast ? .08 : .18);
+        const opacity = isPast ? 'opacity:.5;' : '';
+        html += `<div class="subject-cal-entry" style="background:${bg};${opacity}">`;
+        html += `<span class="cal-date">${ds !== lastDateStr ? fmtShort(c.date)+' '+DAY_SHORT[c.dayIdx] : ''}</span>`;
+        html += `<span class="type-badge" style="background:${hex2rgba(c.color,.3)}">${c.typeName}</span>`;
+        html += `<span>${c.timeStart}-${c.timeEnd}</span>`;
+        html += `<span style="color:var(--text-muted)">${c.roomShort}</span>`;
+        if (c.isLast) html += `<span style="color:var(--last-border);font-size:.6rem;font-weight:700">${c.lastLabel}</span>`;
+        html += '</div>';
+        lastDateStr = ds;
+    });
+    html += '</div></div>';
+
+    html += '</div>';
+    document.getElementById('modalContent').innerHTML = html;
+    document.getElementById('modalOverlay').classList.add('open');
+}
+
+window.closeModal = function() {
+    document.getElementById('modalOverlay').classList.remove('open');
+};
+
+document.getElementById('modalOverlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+});
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function setupNav() {
+    document.getElementById('prevBtn').onclick = () => {
+        if (view==='month') { monthOffset--; render(); }
+        else if (weekIdx > 0) { weekIdx--; render(); }
+    };
+    document.getElementById('nextBtn').onclick = () => {
+        if (view==='month') { monthOffset++; render(); }
+        else if (weekIdx < data.weeks.length-1) { weekIdx++; render(); }
+    };
+    document.getElementById('todayBtn').onclick = () => {
+        monthOffset = 0;
+        const today = new Date(); today.setHours(0,0,0,0);
+        const todayMon = getMonday(today);
+        const idx = data.weeks.findIndex(w => w.monday.getTime()===todayMon.getTime());
+        if (idx >= 0) weekIdx = idx;
+        render();
+    };
+
+    document.querySelectorAll('.view-toggle .nav-btn').forEach(btn => {
+        btn.onclick = () => { view = btn.dataset.view; updateViewToggle(); render(); };
+    });
+
+    document.addEventListener('keydown', e => {
+        if (document.getElementById('modalOverlay').classList.contains('open')) {
+            if (e.key==='Escape') closeModal();
+            return;
+        }
+        if (e.key==='ArrowLeft') document.getElementById('prevBtn').click();
+        if (e.key==='ArrowRight') document.getElementById('nextBtn').click();
+    });
+
+    let tx = 0;
+    document.addEventListener('touchstart', e => { tx=e.touches[0].clientX; }, {passive:true});
+    document.addEventListener('touchend', e => {
+        const dx = e.changedTouches[0].clientX-tx;
+        if (Math.abs(dx)>60) { if(dx>0) document.getElementById('prevBtn').click(); else document.getElementById('nextBtn').click(); }
+    }, {passive:true});
+}
+
+function updateViewToggle() {
+    document.querySelectorAll('.view-toggle .nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view===view));
+}
+
+// ============================================================
+// UTILS
+// ============================================================
+function hex2rgba(hex, a) {
+    if (!hex) return `rgba(128,128,128,${a})`;
+    hex = hex.replace('#','');
+    if (hex.length===3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+    return `rgba(${parseInt(hex.substring(0,2),16)},${parseInt(hex.substring(2,4),16)},${parseInt(hex.substring(4,6),16)},${a})`;
+}
+function fmtShort(d) { return d.getDate().toString().padStart(2,'0')+'.'+(d.getMonth()+1).toString().padStart(2,'0'); }
+function fmtLong(d) { return d.getDate()+' '+MONTH_NAMES[d.getMonth()]+' '+d.getFullYear(); }
+
+// ============================================================
+// FILE LOADING
+// ============================================================
+function loadFile(file) {
+    const status = document.getElementById('autoLoadStatus');
+    status.textContent = 'Wczytywanie...';
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const d = parseScheduleHTML(e.target.result);
+            if (d.allClasses.length===0) {
+                const r2 = new FileReader();
+                r2.onload = e2 => { try { init(parseScheduleHTML(e2.target.result)); } catch(err) { status.textContent='Blad: '+err.message; } };
+                r2.readAsText(file,'utf-8');
+            } else init(d);
+        } catch(err) { status.textContent='Blad: '+err.message; console.error(err); }
+    };
+    reader.readAsText(file,'windows-1250');
+}
+
+document.getElementById('fileInput').addEventListener('change', e => { if(e.target.files[0]) loadFile(e.target.files[0]); });
+const dz = document.getElementById('dropZone');
+dz.addEventListener('click', ()=>document.getElementById('fileInput').click());
+dz.addEventListener('dragover', e=>{e.preventDefault();dz.classList.add('drag-over');});
+dz.addEventListener('dragleave', ()=>dz.classList.remove('drag-over'));
+dz.addEventListener('drop', e=>{e.preventDefault();dz.classList.remove('drag-over');if(e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0]);});
+
+// ============================================================
+// FETCH FROM WAT SERVER
+// ============================================================
+const urlParams = new URLSearchParams(window.location.search);
+const paramGroup = urlParams.get('group') || urlParams.get('g') || '';
+const paramSem = urlParams.get('sem') || urlParams.get('s') || '';
+
+document.getElementById('semesterSelect').value = paramSem || getDefaultSemester();
+if (paramGroup) document.getElementById('groupInput').value = paramGroup;
+
+document.getElementById('fetchBtn').addEventListener('click', () => {
+    const group = document.getElementById('groupInput').value.trim();
+    if (!group) { showFetchError('Wpisz nazwe grupy'); return; }
+    doFetch(group, document.getElementById('semesterSelect').value);
+});
+
+document.getElementById('groupInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('fetchBtn').click();
+});
+
+function showFetchError(msg) {
+    const el = document.getElementById('fetchError');
+    el.textContent = msg;
+    el.style.display = 'block';
+}
+
+async function doFetch(group, semester) {
+    const status = document.getElementById('autoLoadStatus');
+    const fetchBtn = document.getElementById('fetchBtn');
+    const errorEl = document.getElementById('fetchError');
+    errorEl.style.display = 'none';
+    fetchBtn.disabled = true;
+    fetchBtn.textContent = 'Pobieranie...';
+    status.textContent = 'Laczenie z serwerem WAT...';
+
+    try {
+        const html = await fetchPlanFromWAT(group, semester);
+        status.textContent = 'Parsowanie planu...';
+        const d = parseScheduleHTML(html);
+        if (d.allClasses.length === 0) throw new Error('Plan jest pusty - sprawdz nazwe grupy');
+
+        // Update URL for sharing (without reload)
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.set('group', group);
+        newUrl.searchParams.set('sem', semester);
+        window.history.replaceState({}, '', newUrl);
+
+        currentGroup = group;
+        currentSemester = semester;
+        init(d);
+    } catch (e) {
+        showFetchError(e.message);
+        status.textContent = '';
+    } finally {
+        fetchBtn.disabled = false;
+        fetchBtn.textContent = 'Pobierz plan';
+    }
+}
+
+// Auto-load: URL params → local file → manual
+(async function() {
+    const status = document.getElementById('autoLoadStatus');
+
+    if (paramGroup) {
+        await doFetch(paramGroup, paramSem || getDefaultSemester());
+        return;
+    }
+
+    // Try local file (for development / same-directory hosting)
+    for (const f of [location.pathname.split('/').pop().replace('.html','.htm'), 'WEL24EQ3S1.html','WEL24EQ3S1.htm']) {
+        if (!f) continue;
+        try {
+            status.textContent = '';
+            const r = await fetch(f);
+            if (r.ok) {
+                const buf = await r.arrayBuffer();
+                const html = new TextDecoder('windows-1250').decode(buf);
+                const d = parseScheduleHTML(html);
+                if (d.allClasses.length > 0) { init(d); return; }
+            }
+        } catch(e) {}
+    }
+    status.textContent = '';
+    document.getElementById('groupInput').focus();
+})();
+</script>
+</body>
+</html>
