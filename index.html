@@ -1856,13 +1856,11 @@
             WIM: { name: 'Wydz. Inzynierii Mechanicznej', lato: 'https://www.wim.wat.edu.pl/wp-content/uploads/rozklady/lato', zima: 'https://www.wim.wat.edu.pl/wp-content/uploads/rozklady/zima' }
         };
 
-        // corsproxy.io is PAID on non-localhost — only use locally
-        const IS_LOCAL = ['localhost', '127.0.0.1', ''].includes(location.hostname);
+        // IS_LOCAL = http://localhost or http://127.0.0.1 (NOT file://)
+        const IS_LOCAL = location.protocol.startsWith('http') && ['localhost', '127.0.0.1'].includes(location.hostname);
         const CORS_PROXIES = [
             url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
             url => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url),
-            url => 'https://corsproxy.org/?' + encodeURIComponent(url),
-            url => 'https://thingproxy.freeboard.io/fetch/' + url,
             ...(IS_LOCAL ? [url => 'https://corsproxy.io/?' + encodeURIComponent(url)] : []),
         ];
 
@@ -3460,7 +3458,7 @@
 
             function handleCloseAttempt(e) {
                 e.stopPropagation();
-                e.preventDefault();
+                if (e.cancelable) e.preventDefault();
                 if (evades < maxEvades) { evadeClose(); return; }
                 actuallyClose();
             }
@@ -3472,13 +3470,13 @@
 
             closeBtn.addEventListener('click', handleCloseAttempt);
             closeBtn.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
-            closeBtn.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); handleCloseAttempt(e); }, { passive: false });
+            closeBtn.addEventListener('touchend', (e) => { e.stopPropagation(); if (e.cancelable) e.preventDefault(); handleCloseAttempt(e); }, { passive: false });
 
             // CTA spawns another mamuśki ad
             const ctaBtn = el.querySelector('.gif-ad-cta');
             ctaBtn.addEventListener('click', () => spawnMamuskiAd());
             ctaBtn.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
-            ctaBtn.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); spawnMamuskiAd(); }, { passive: false });
+            ctaBtn.addEventListener('touchend', (e) => { e.stopPropagation(); if (e.cancelable) e.preventDefault(); spawnMamuskiAd(); }, { passive: false });
 
             // Draggable
             let isDragging = false, dragOffX = 0, dragOffY = 0;
@@ -3592,7 +3590,7 @@
 
             function handleCloseAttempt(e) {
                 e.stopPropagation();
-                e.preventDefault();
+                if (e.cancelable) e.preventDefault();
                 if (evades < maxEvades) { evadeClose(); return; }
                 actuallyClose();
             }
@@ -3604,13 +3602,13 @@
 
             closeBtn.addEventListener('click', handleCloseAttempt);
             closeBtn.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
-            closeBtn.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); handleCloseAttempt(e); }, { passive: false });
+            closeBtn.addEventListener('touchend', (e) => { e.stopPropagation(); if (e.cancelable) e.preventDefault(); handleCloseAttempt(e); }, { passive: false });
 
             // CTA spawns another ad
             const ctaBtn = el.querySelector('.gif-ad-cta');
             ctaBtn.addEventListener('click', () => spawnGifAd());
             ctaBtn.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
-            ctaBtn.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); spawnGifAd(); }, { passive: false });
+            ctaBtn.addEventListener('touchend', (e) => { e.stopPropagation(); if (e.cancelable) e.preventDefault(); spawnGifAd(); }, { passive: false });
 
             // Make draggable (mouse)
             let isDragging = false, dragOffX = 0, dragOffY = 0;
