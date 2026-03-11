@@ -1,4 +1,4 @@
-const CACHE = 'wat-plan-v1';
+const CACHE = 'wat-plan-v2';
 const SHELL = ['/', '/index.html', '/manifest.json', '/icons/icon.svg'];
 
 self.addEventListener('install', e => {
@@ -30,11 +30,9 @@ self.addEventListener('fetch', e => {
         return;
     }
 
-    // Network-first for WAT plan fetches (via proxy), no caching for external URLs
-    if (url.hostname !== self.location.hostname) {
-        e.respondWith(fetch(e.request));
-        return;
-    }
+    // Don't intercept external requests — let the browser handle them natively
+    // (re-fetching via SW can alter CORS/Origin headers and break proxy responses)
+    if (url.hostname !== self.location.hostname) return;
 
     // GIFs: cache-first
     if (url.pathname.startsWith('/gifs/')) {
@@ -48,5 +46,5 @@ self.addEventListener('fetch', e => {
         return;
     }
 
-    e.respondWith(fetch(e.request));
+    // All other same-origin requests: don't intercept
 });
