@@ -60,7 +60,12 @@
             padding: 2rem;
             text-align: center;
             position: relative;
-            z-index: 160;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        #loader * {
+            pointer-events: auto;
         }
 
         #loader h1 {
@@ -1598,17 +1603,27 @@
 
         .gif-ad .gif-ad-close {
             position: absolute;
-            top: 4px;
-            right: 8px;
-            color: rgba(255, 255, 255, .4);
-            font-size: 1.1rem;
+            top: 2px;
+            right: 4px;
+            color: rgba(255, 255, 255, .5);
+            font-size: 1rem;
             cursor: pointer;
-            transition: all .05s;
-            z-index: 5;
-            text-shadow: 0 0 4px #000;
+            transition: color .1s;
+            z-index: 50;
+            padding: 8px 10px;
+            line-height: 1;
+            background: none;
+            border: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
         }
 
         .gif-ad .gif-ad-close:hover {
+            color: #fff;
+        }
+
+        .gif-ad .gif-ad-close:active {
             color: #f0f;
         }
 
@@ -1688,8 +1703,9 @@
 
             .gif-ad .gif-ad-close {
                 top: 2px;
-                right: 4px;
-                font-size: .9rem;
+                right: 2px;
+                font-size: 1rem;
+                padding: 10px 12px;
             }
 
             .gif-ad .gif-ad-tag {
@@ -3421,27 +3437,48 @@
                 }
             }, 300 + Math.random() * 200);
 
-            // Evasive close
+            // Evasive close — dodges a few times on both desktop & mobile, then actually closes
             const closeBtn = el.querySelector('.gif-ad-close');
             let evades = 0;
-            closeBtn.addEventListener('mouseenter', () => {
-                if (evades < 4 && Math.random() < 0.75) {
-                    closeBtn.style.position = 'absolute';
-                    closeBtn.style.top = (5 + Math.random() * 30) + 'px';
-                    closeBtn.style.right = (5 + Math.random() * 40) + 'px';
-                    evades++;
-                }
-            });
-            closeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
+            const maxEvades = 3 + Math.floor(Math.random() * 2); // 3-4 evades before it works
+
+            function evadeClose() {
+                const rect = el.getBoundingClientRect();
+                const maxTop = Math.max(5, rect.height - 40);
+                const maxRight = Math.max(5, rect.width - 40);
+                closeBtn.style.top = (5 + Math.random() * Math.min(30, maxTop)) + 'px';
+                closeBtn.style.right = (5 + Math.random() * Math.min(40, maxRight)) + 'px';
+                evades++;
+            }
+
+            function actuallyClose() {
                 clearInterval(distTimer);
                 el.style.animation = 'none'; el.style.transform = 'scale(0)'; el.style.opacity = '0';
                 el.style.transition = 'all .2s';
                 setTimeout(() => el.remove(), 250);
+            }
+
+            function handleCloseAttempt(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                if (evades < maxEvades) { evadeClose(); return; }
+                actuallyClose();
+            }
+
+            // Desktop: evade on hover
+            closeBtn.addEventListener('mouseenter', () => {
+                if (evades < maxEvades && Math.random() < 0.8) evadeClose();
             });
 
+            closeBtn.addEventListener('click', handleCloseAttempt);
+            closeBtn.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
+            closeBtn.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); handleCloseAttempt(e); }, { passive: false });
+
             // CTA spawns another mamuśki ad
-            el.querySelector('.gif-ad-cta').addEventListener('click', () => spawnMamuskiAd());
+            const ctaBtn = el.querySelector('.gif-ad-cta');
+            ctaBtn.addEventListener('click', () => spawnMamuskiAd());
+            ctaBtn.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
+            ctaBtn.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); spawnMamuskiAd(); }, { passive: false });
 
             // Draggable
             let isDragging = false, dragOffX = 0, dragOffY = 0;
@@ -3533,26 +3570,47 @@
                 <div class="gif-ad-cta">${text.c}</div>
             `;
 
-            // Evasive close button
+            // Evasive close — dodges a few times on both desktop & mobile, then actually closes
             const closeBtn = el.querySelector('.gif-ad-close');
             let evades = 0;
-            closeBtn.addEventListener('mouseenter', () => {
-                if (evades < 3 && Math.random() < 0.65) {
-                    closeBtn.style.position = 'absolute';
-                    closeBtn.style.top = (5 + Math.random() * 30) + 'px';
-                    closeBtn.style.right = (5 + Math.random() * 40) + 'px';
-                    evades++;
-                }
-            });
-            closeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
+            const maxEvades = 2 + Math.floor(Math.random() * 2); // 2-3 evades before it works
+
+            function evadeClose() {
+                const rect = el.getBoundingClientRect();
+                const maxTop = Math.max(5, rect.height - 40);
+                const maxRight = Math.max(5, rect.width - 40);
+                closeBtn.style.top = (5 + Math.random() * Math.min(30, maxTop)) + 'px';
+                closeBtn.style.right = (5 + Math.random() * Math.min(40, maxRight)) + 'px';
+                evades++;
+            }
+
+            function actuallyClose() {
                 el.style.animation = 'none'; el.style.transform = 'scale(0)'; el.style.opacity = '0';
                 el.style.transition = 'all .2s';
                 setTimeout(() => el.remove(), 250);
+            }
+
+            function handleCloseAttempt(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                if (evades < maxEvades) { evadeClose(); return; }
+                actuallyClose();
+            }
+
+            // Desktop: evade on hover
+            closeBtn.addEventListener('mouseenter', () => {
+                if (evades < maxEvades && Math.random() < 0.7) evadeClose();
             });
 
+            closeBtn.addEventListener('click', handleCloseAttempt);
+            closeBtn.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
+            closeBtn.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); handleCloseAttempt(e); }, { passive: false });
+
             // CTA spawns another ad
-            el.querySelector('.gif-ad-cta').addEventListener('click', () => spawnGifAd());
+            const ctaBtn = el.querySelector('.gif-ad-cta');
+            ctaBtn.addEventListener('click', () => spawnGifAd());
+            ctaBtn.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
+            ctaBtn.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); spawnGifAd(); }, { passive: false });
 
             // Make draggable (mouse)
             let isDragging = false, dragOffX = 0, dragOffY = 0;
