@@ -1853,10 +1853,12 @@
         const MONTH_NAMES = ['stycznia', 'lutego', 'marca', 'kwietnia', 'maja', 'czerwca', 'lipca', 'sierpnia', 'wrzesnia', 'pazdziernika', 'listopada', 'grudnia'];
 
         // Department base URLs (from WAT Plan Viewer app)
+        // Academic year: September starts new year (month >= 8 → current year, else year-1)
+        const _acadYear = (() => { const n = new Date(); return n.getMonth() >= 8 ? n.getFullYear() : n.getFullYear() - 1; })();
         const DEPARTMENTS = {
             WEL: { name: 'Wydz. Elektroniki', lato: 'https://plany.wel.wat.edu.pl/lato', zima: 'https://plany.wel.wat.edu.pl/zima' },
             WLO: { name: 'Wydz. Bezp. Logistyki i Zarzadzania', lato: 'https://wlo.wat.edu.pl/planzajec/letni', zima: 'https://wlo.wat.edu.pl/planzajec/zimowy' },
-            WML: { name: 'Wydz. Mechatroniki, Uzbrojenia i Lotnictwa', lato: 'https://wml.wat.edu.pl/wp-content/uploads/rozklady_zajec/2024_sem_lato', zima: 'https://wml.wat.edu.pl/wp-content/uploads/rozklady_zajec/2024_sem_zima' },
+            WML: { name: 'Wydz. Mechatroniki, Uzbrojenia i Lotnictwa', lato: `https://wml.wat.edu.pl/wp-content/uploads/rozklady_zajec/${_acadYear}_sem_lato`, zima: `https://wml.wat.edu.pl/wp-content/uploads/rozklady_zajec/${_acadYear}_sem_zima` },
             IOE: { name: 'Instytut Optoelektroniki', lato: 'https://ioe.wat.edu.pl/plany/lato', zima: 'https://ioe.wat.edu.pl/plany/zima' },
             WTC: { name: 'Wydz. Nowych Technologii i Chemii', lato: 'https://www.wtc.wat.edu.pl/Plany', zima: 'https://www.wtc.wat.edu.pl/Plany' },
             WIM: { name: 'Wydz. Inzynierii Mechanicznej', lato: 'https://www.wim.wat.edu.pl/wp-content/uploads/rozklady/lato', zima: 'https://www.wim.wat.edu.pl/wp-content/uploads/rozklady/zima' }
@@ -3138,7 +3140,7 @@
                         .map(it => ({ ...it, tag: '' }));
                     renderAc(filtered);
                 } else {
-                    acDrop.innerHTML = '<div class="ac-loading">Nie udalo sie pobrac listy</div>';
+                    acDrop.innerHTML = '<div class="ac-loading">Nie udało się pobrać listy grup — wpisz nazwę ręcznie i kliknij Pobierz</div>';
                     acDrop.classList.add('open');
                 }
             } else if (!deptKey) {
