@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#0f1117"/>
+  <rect x="60" y="105" width="392" height="347" rx="18" fill="#1a1d27" stroke="#2d3348" stroke-width="4"/>
+  <rect x="60" y="105" width="392" height="65" rx="18" fill="#6366f1"/>
+  <rect x="60" y="148" width="392" height="22" fill="#6366f1"/>
+  <line x1="60" y1="222" x2="452" y2="222" stroke="#2d3348" stroke-width="3"/>
+  <line x1="60" y1="282" x2="452" y2="282" stroke="#2d3348" stroke-width="3"/>
+  <line x1="60" y1="342" x2="452" y2="342" stroke="#2d3348" stroke-width="3"/>
+  <line x1="60" y1="402" x2="452" y2="402" stroke="#2d3348" stroke-width="3"/>
+  <line x1="152" y1="170" x2="152" y2="452" stroke="#2d3348" stroke-width="3"/>
+  <line x1="244" y1="170" x2="244" y2="452" stroke="#2d3348" stroke-width="3"/>
+  <line x1="336" y1="170" x2="336" y2="452" stroke="#2d3348" stroke-width="3"/>
+  <rect x="70" y="229" width="72" height="44" rx="7" fill="#6366f1" opacity=".95"/>
+  <rect x="162" y="229" width="72" height="104" rx="7" fill="#818cf8" opacity=".85"/>
+  <rect x="254" y="289" width="72" height="44" rx="7" fill="#34d399" opacity=".85"/>
+  <rect x="346" y="229" width="96" height="44" rx="7" fill="#f59e0b" opacity=".85"/>
+  <rect x="70" y="349" width="72" height="44" rx="7" fill="#22d3ee" opacity=".85"/>
+  <rect x="254" y="349" width="72" height="44" rx="7" fill="#6366f1" opacity=".75"/>
+  <rect x="346" y="349" width="96" height="44" rx="7" fill="#818cf8" opacity=".75"/>
+  <text x="256" y="145" text-anchor="middle" font-family="system-ui,sans-serif" font-size="28" font-weight="700" fill="white" opacity=".9">PLAN WAT</text>
+</svg>
