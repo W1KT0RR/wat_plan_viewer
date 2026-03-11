@@ -3081,9 +3081,9 @@
         const GIF_AD_TEXTS = [
             { t: 'GORĄCE SINGIELKI w koszarach!', s: '3 km od Twojej jednostki wojskowej!', c: 'POZNAJ JE 🔥' },
             { t: 'ZAROB 50000zł DZIENNIE!', s: 'Wystarczy rzucić studia na WAT!', c: 'DOWIEDZ SIĘ 💰' },
-            { t: 'WYKRYTO 37 WIRUSÓW!', s: 'Twój laptop WCY jest zagrożony!', c: 'SKANUJ TERAZ ⚠️' },
-            { t: 'Profesorowie NIENAWIDZĄ tego triku!', s: 'Zdaj egzamin bez nauki w 24h!', c: 'SPRAWDŹ 🧠' },
-            { t: 'iPhone 47 za 1zł!', s: 'Zostały 2 sztuki! Oferta wygasa za 0:03:22', c: 'KUP TERAZ 📱' },
+            { t: 'WYKRYTO 21377 WIRUSÓW!', s: 'Twój laptop WEL jest zagrożony!', c: 'SKANUJ TERAZ ⚠️' },
+            { t: 'Profesorowie NIENAWIDZĄ tego triku!', s: 'Zdaj egzamin bez nauki w 3h!', c: 'SPRAWDŹ 🧠' },
+            { t: 'Samsung S26 za 1zł!', s: 'Zostały 2 sztuki! Oferta wygasa za 0:03:22', c: 'KUP TERAZ Z KODEM SEX69 📱' },
             { t: 'NOWY PLAN bez PONIEDZIAŁKÓW!', s: 'Rektor potwierdził! Kliknij aby aktywować!', c: 'AKTYWUJ ✅' },
             { t: 'Dziekanat OTWARTY 24/7!', s: 'Nowa reforma — dziekanat non-stop!', c: 'SZCZEGÓŁY 🏛️' },
             { t: 'DARMOWE OBIADY na stołówce!', s: 'Wystarczy podać ten tajny kod...', c: 'POKAŻ KOD 🍔' },
@@ -3094,60 +3094,190 @@
             { t: 'AKADEMIK z KLIMATYZACJĄ!', s: 'Nowe pokoje 1-osobowe od przyszłego semestru!', c: 'REZERWUJ 🏠' },
             { t: 'PĄCZKI w bufecie — PROMOCJA!', s: 'Kup 1, dostaniesz 47 GRATIS!', c: 'JEDZ 🍩' },
             { t: 'Twój WYKŁADOWCA Cię szuka!', s: 'Masz niezaliczone kolokwium z 2019...', c: 'UKRYJ SIĘ 🫣' },
+            { t: 'GORĄCA GOTH z WEL szuka CIEBIE!', s: 'Czarne paznokcie, kolczyk w języku...', c: 'NAPISZ DO NIEJ 🖤' },
+            { t: 'BLIK ZA NOTATKI!', s: 'Najlepsze notatki z analizy za 2zł!', c: 'KUPUJĘ 📝' },
+            { t: 'ALARM: Twoja SESJA w ZAGROŻENIU!', s: 'Wykryto 0 godzin nauki w tym tygodniu!', c: 'RATUJ SIĘ 🚨' },
+            { t: 'KEBAB GRATIS po 22:00!', s: 'Pokaż legitymację WAT w dowolnym kebabie!', c: 'SPRAWDŹ GDZIE 🌯' },
+            { t: 'MUNDUR PREMIUM za 50% CENY!', s: 'Outlet wojskowy — ostatnie sztuki!', c: 'KUP MUNDUR 🎖️' },
         ];
+
+        // === MAMUŚKI GEO AD SYSTEM ===
+        const MAMUSKI_ADDRESSES = [
+            'ul. Gen. Sylwestra Kaliskiego 2', 'ul. Kartezjusza 1', 'ul. Radiowa 25',
+            'ul. Fieldorfa 10', 'ul. Ostroroga 35A', 'ul. Księcia Bolesława 6',
+            'ul. Bemowska 8', 'ul. Lazurowa 14', 'ul. Górczewska 124',
+            'ul. Kaliskiego 25B', 'ul. Radiowa 3', 'ul. Powstańców Śląskich 95',
+            'ul. Obozowa 57', 'akademik WAT nr 3, pokój 214', 'akademik WAT nr 4, pralnia',
+            'bud. 100, sala 135', 'parking przy bud. 57', 'stołówka WAT, stolik nr 7',
+            'siłownia WAT, szatnia męska', 'biblioteka WAT, czytelnia cicha',
+        ];
+        const MAMUSKI_NAMES = [
+            'Grażyna (47)', 'Bożena (52)', 'Halina (44)', 'Danuta (49)', 'Krystyna (55)',
+            'Elżbieta (43)', 'Jolanta (51)', 'Małgorzata (46)', 'Teresa (53)', 'Wiesława (48)',
+            'Ewa (42)', 'Agnieszka (45)', 'Zofia (58)', 'Barbara (50)', 'Irena (54)',
+        ];
+
+        function spawnMamuskiAd() {
+            const container = document.getElementById('gifAdContainer');
+            if (!container) return;
+            const loader = document.getElementById('loader');
+            if (loader && loader.style.display === 'none') return;
+
+            const name = MAMUSKI_NAMES[Math.floor(Math.random() * MAMUSKI_NAMES.length)];
+            const addr = MAMUSKI_ADDRESSES[Math.floor(Math.random() * MAMUSKI_ADDRESSES.length)];
+            let dist = (1.5 + Math.random() * 3.5); // start 1.5-5km away
+            const gif = GIF_FILES[Math.floor(Math.random() * GIF_FILES.length)];
+
+            const el = document.createElement('div');
+            el.className = 'gif-ad mamuski-ad';
+            el.style.borderColor = '#ff1493';
+            el.style.boxShadow = '0 0 40px rgba(255,20,147,.5), 0 4px 20px rgba(0,0,0,.5)';
+
+            const vw = window.innerWidth, vh = window.innerHeight;
+            const isMobile = window.innerWidth <= 750;
+            if (isMobile) {
+                el.style.bottom = '10px';
+                el.style.left = '10px';
+                el.style.top = 'auto';
+            } else {
+                el.style.left = (20 + Math.random() * Math.max(10, vw - 300)) + 'px';
+                el.style.top = (20 + Math.random() * Math.max(10, vh - 400)) + 'px';
+            }
+            el.style.animationDelay = '0s, ' + (Math.random() * 2).toFixed(1) + 's';
+
+            const distId = 'mamuski_dist_' + Date.now();
+            el.innerHTML = `
+                <span class="gif-ad-tag">REKLAMA 18+</span>
+                <span class="gif-ad-close">✕</span>
+                <img src="${gif}" alt="ad" loading="lazy">
+                <div class="gif-ad-text" style="color:#ff69b4">
+                    🔥 ${name} biegnie do CIEBIE! 🔥
+                    <div class="gif-ad-sub" style="color:#ff1493">
+                        📍 ${addr}<br>
+                        📏 Dystans: <strong id="${distId}">${dist.toFixed(2)} km</strong><br>
+                        ⚡ ZBLIŻA SIĘ!
+                    </div>
+                </div>
+                <div class="gif-ad-cta" style="background:linear-gradient(90deg,#ff1493,#ff69b4)">OTWÓRZ CZAT 💋</div>
+            `;
+
+            // Live distance countdown
+            const distEl = () => document.getElementById(distId);
+            const distTimer = setInterval(() => {
+                dist -= (0.01 + Math.random() * 0.04);
+                if (dist < 0.01) dist = 0.001 + Math.random() * 0.005;
+                const d = distEl();
+                if (d) {
+                    d.textContent = dist < 0.05 ? (dist * 1000).toFixed(0) + ' m' : dist.toFixed(2) + ' km';
+                    if (dist < 0.1) d.style.color = '#ff0';
+                    if (dist < 0.03) d.textContent = '🚪 ZA DRZWIAMI!';
+                } else {
+                    clearInterval(distTimer);
+                }
+            }, 300 + Math.random() * 200);
+
+            // Evasive close
+            const closeBtn = el.querySelector('.gif-ad-close');
+            let evades = 0;
+            closeBtn.addEventListener('mouseenter', () => {
+                if (evades < 4 && Math.random() < 0.75) {
+                    closeBtn.style.position = 'absolute';
+                    closeBtn.style.top = (5 + Math.random() * 30) + 'px';
+                    closeBtn.style.right = (5 + Math.random() * 40) + 'px';
+                    evades++;
+                }
+            });
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                clearInterval(distTimer);
+                el.style.animation = 'none'; el.style.transform = 'scale(0)'; el.style.opacity = '0';
+                el.style.transition = 'all .2s';
+                setTimeout(() => el.remove(), 250);
+            });
+
+            // CTA spawns another mamuśki ad
+            el.querySelector('.gif-ad-cta').addEventListener('click', () => spawnMamuskiAd());
+
+            // Draggable
+            let isDragging = false, dragOffX = 0, dragOffY = 0;
+            el.addEventListener('mousedown', (e) => {
+                if (e.target.closest('.gif-ad-close') || e.target.closest('.gif-ad-cta')) return;
+                isDragging = true; el.classList.add('dragging');
+                dragOffX = e.clientX - el.offsetLeft; dragOffY = e.clientY - el.offsetTop;
+                e.preventDefault();
+            });
+            document.addEventListener('mousemove', (e) => { if (!isDragging) return; el.style.left = (e.clientX - dragOffX) + 'px'; el.style.top = (e.clientY - dragOffY) + 'px'; });
+            document.addEventListener('mouseup', () => { if (isDragging) { isDragging = false; el.classList.remove('dragging'); } });
+
+            // Touch drag support for mobile
+            el.addEventListener('touchstart', (e) => {
+                if (e.target.closest('.gif-ad-close') || e.target.closest('.gif-ad-cta')) return;
+                isDragging = true; el.classList.add('dragging');
+                const t = e.touches[0];
+                dragOffX = t.clientX - el.offsetLeft; dragOffY = t.clientY - el.offsetTop;
+            }, { passive: true });
+            document.addEventListener('touchmove', (e) => { if (!isDragging) return; const t = e.touches[0]; el.style.left = (t.clientX - dragOffX) + 'px'; el.style.top = (t.clientY - dragOffY) + 'px'; }, { passive: true });
+            document.addEventListener('touchend', () => { if (isDragging) { isDragging = false; el.classList.remove('dragging'); } });
+
+            container.appendChild(el);
+
+            // Auto-remove after 20-30s
+            setTimeout(() => {
+                clearInterval(distTimer);
+                if (el.parentElement) {
+                    el.style.transition = 'all .3s'; el.style.transform = 'scale(0) rotate(20deg)'; el.style.opacity = '0';
+                    setTimeout(() => el.remove(), 350);
+                }
+            }, 20000 + Math.random() * 10000);
+        }
 
         let gifAdTimer = null;
         let gifAdCount = 0;
-        const MAX_GIF_ADS = 3;
+        const MAX_GIF_ADS = 5;
 
         function spawnGifAd() {
             const container = document.getElementById('gifAdContainer');
             if (!container) return;
-            // Don't spawn if loader is hidden (plan is loaded)
             const loader = document.getElementById('loader');
             if (loader && loader.style.display === 'none') {
                 stopGifAds();
                 return;
             }
             const isMobile = window.innerWidth <= 750;
-            // Limit max ads: 1 on mobile, 3 on desktop
-            const maxAds = isMobile ? 1 : MAX_GIF_ADS;
+            const maxAds = isMobile ? 2 : MAX_GIF_ADS;
             if (container.querySelectorAll('.gif-ad').length >= maxAds) return;
+
+            // 25% chance to spawn a mamuśki ad instead
+            if (Math.random() < 0.25) {
+                spawnMamuskiAd();
+                return;
+            }
 
             const gif = GIF_FILES[Math.floor(Math.random() * GIF_FILES.length)];
             const text = GIF_AD_TEXTS[Math.floor(Math.random() * GIF_AD_TEXTS.length)];
 
             const el = document.createElement('div');
             el.className = 'gif-ad';
-            // Position in zones AROUND the center form (avoid middle 500px)
             const vw = window.innerWidth, vh = window.innerHeight;
             const adW = isMobile ? 180 : 250;
             if (isMobile) {
-                // Bottom of screen, centered or offset
                 el.style.bottom = '10px';
                 el.style.left = (10 + Math.random() * Math.max(10, vw - adW - 20)) + 'px';
                 el.style.top = 'auto';
             } else {
-                // Pick a zone: 0=left, 1=right, 2=top-left, 3=top-right, 4=bottom-left, 5=bottom-right
                 const zones = [];
                 const centerX = vw / 2, centerY = vh / 2;
-                const safeMargin = 280; // half-width of form area to avoid
-                // Left zone
+                const safeMargin = 280;
                 if (centerX - safeMargin > adW + 20) zones.push({ x: [10, centerX - safeMargin - adW], y: [60, vh - 400] });
-                // Right zone
                 if (vw - centerX - safeMargin > adW + 20) zones.push({ x: [centerX + safeMargin, vw - adW - 10], y: [60, vh - 400] });
-                // Top zone (above form)
                 zones.push({ x: [10, vw - adW - 10], y: [10, Math.max(20, centerY - 300)] });
-                // Bottom zone (below form)
                 zones.push({ x: [10, vw - adW - 10], y: [Math.min(vh - 350, centerY + 200), vh - 350] });
-
                 const zone = zones[Math.floor(Math.random() * zones.length)];
                 const x = zone.x[0] + Math.random() * Math.max(0, zone.x[1] - zone.x[0]);
                 const y = zone.y[0] + Math.random() * Math.max(0, zone.y[1] - zone.y[0]);
                 el.style.left = Math.max(5, x) + 'px';
                 el.style.top = Math.max(5, y) + 'px';
             }
-            // Slight random delay for float animation
             el.style.animationDelay = '0s, ' + (Math.random() * 2).toFixed(1) + 's';
 
             el.innerHTML = `
@@ -3171,9 +3301,7 @@
             });
             closeBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                el.style.animation = 'none';
-                el.style.transform = 'scale(0)';
-                el.style.opacity = '0';
+                el.style.animation = 'none'; el.style.transform = 'scale(0)'; el.style.opacity = '0';
                 el.style.transition = 'all .2s';
                 setTimeout(() => el.remove(), 250);
             });
@@ -3181,47 +3309,42 @@
             // CTA spawns another ad
             el.querySelector('.gif-ad-cta').addEventListener('click', () => spawnGifAd());
 
-            // Make draggable
+            // Make draggable (mouse)
             let isDragging = false, dragOffX = 0, dragOffY = 0;
             el.addEventListener('mousedown', (e) => {
                 if (e.target.closest('.gif-ad-close') || e.target.closest('.gif-ad-cta')) return;
-                isDragging = true;
-                el.classList.add('dragging');
-                dragOffX = e.clientX - el.offsetLeft;
-                dragOffY = e.clientY - el.offsetTop;
+                isDragging = true; el.classList.add('dragging');
+                dragOffX = e.clientX - el.offsetLeft; dragOffY = e.clientY - el.offsetTop;
                 e.preventDefault();
             });
-            document.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                el.style.left = (e.clientX - dragOffX) + 'px';
-                el.style.top = (e.clientY - dragOffY) + 'px';
-            });
-            document.addEventListener('mouseup', () => {
-                if (isDragging) {
-                    isDragging = false;
-                    el.classList.remove('dragging');
-                }
-            });
+            document.addEventListener('mousemove', (e) => { if (!isDragging) return; el.style.left = (e.clientX - dragOffX) + 'px'; el.style.top = (e.clientY - dragOffY) + 'px'; });
+            document.addEventListener('mouseup', () => { if (isDragging) { isDragging = false; el.classList.remove('dragging'); } });
+
+            // Touch drag for mobile
+            el.addEventListener('touchstart', (e) => {
+                if (e.target.closest('.gif-ad-close') || e.target.closest('.gif-ad-cta')) return;
+                isDragging = true; el.classList.add('dragging');
+                const t = e.touches[0]; dragOffX = t.clientX - el.offsetLeft; dragOffY = t.clientY - el.offsetTop;
+            }, { passive: true });
+            document.addEventListener('touchmove', (e) => { if (!isDragging) return; const t = e.touches[0]; el.style.left = (t.clientX - dragOffX) + 'px'; el.style.top = (t.clientY - dragOffY) + 'px'; }, { passive: true });
+            document.addEventListener('touchend', () => { if (isDragging) { isDragging = false; el.classList.remove('dragging'); } });
 
             container.appendChild(el);
             gifAdCount++;
 
-            // Auto-remove after a while
+            // Auto-remove after 12-20s
             setTimeout(() => {
                 if (el.parentElement) {
-                    el.style.transition = 'all .3s';
-                    el.style.transform = 'scale(0) rotate(20deg)';
-                    el.style.opacity = '0';
+                    el.style.transition = 'all .3s'; el.style.transform = 'scale(0) rotate(20deg)'; el.style.opacity = '0';
                     setTimeout(() => el.remove(), 350);
                 }
-            }, 15000 + Math.random() * 10000);
+            }, 12000 + Math.random() * 8000);
         }
 
         function startGifAds() {
-            // Spawn first ad after a short delay
-            setTimeout(spawnGifAd, 1500);
-            // Then spawn periodically
-            gifAdTimer = setInterval(spawnGifAd, 6000);
+            setTimeout(spawnGifAd, 800);
+            setTimeout(spawnGifAd, 2000);
+            gifAdTimer = setInterval(spawnGifAd, 3000);
         }
 
         function stopGifAds() {
