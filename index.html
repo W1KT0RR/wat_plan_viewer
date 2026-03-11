@@ -1793,12 +1793,14 @@
             WIM: { name: 'Wydz. Inzynierii Mechanicznej', lato: 'https://www.wim.wat.edu.pl/wp-content/uploads/rozklady/lato', zima: 'https://www.wim.wat.edu.pl/wp-content/uploads/rozklady/zima' }
         };
 
+        // corsproxy.io is PAID on non-localhost — only use locally
+        const IS_LOCAL = ['localhost', '127.0.0.1', ''].includes(location.hostname);
         const CORS_PROXIES = [
-            url => 'https://corsproxy.io/?' + encodeURIComponent(url),
             url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
             url => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url),
+            url => 'https://corsproxy.org/?' + encodeURIComponent(url),
             url => 'https://thingproxy.freeboard.io/fetch/' + url,
-            url => 'https://cors.eu.org/' + url
+            ...(IS_LOCAL ? [url => 'https://corsproxy.io/?' + encodeURIComponent(url)] : []),
         ];
 
         function detectDepartment(groupName) {
@@ -3159,8 +3161,8 @@
                 return;
             }
 
-            // Try local file (for development / same-directory hosting)
-            for (const f of [location.pathname.split('/').pop().replace('.html', '.htm'), 'WEL24EQ3S1.html', 'WEL24EQ3S1.htm']) {
+            // Try local file (for development / same-directory hosting — localhost only)
+            if (IS_LOCAL) for (const f of [location.pathname.split('/').pop().replace('.html', '.htm'), 'WEL24EQ3S1.html', 'WEL24EQ3S1.htm']) {
                 if (!f) continue;
                 try {
                     status.textContent = '';
