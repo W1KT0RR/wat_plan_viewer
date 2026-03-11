@@ -59,32 +59,16 @@
             min-height: 100vh;
             padding: 2rem;
             text-align: center;
-            position: relative;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        #loader * {
-            pointer-events: auto;
         }
 
         #loader h1 {
-            font-size: 2.4rem;
-            font-weight: 800;
-            margin-bottom: .6rem;
-            letter-spacing: -.5px;
-            background: linear-gradient(135deg, var(--text) 0%, var(--accent-light) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 1.8rem;
+            margin-bottom: .5rem;
         }
 
         #loader p {
             color: var(--text-muted);
             margin-bottom: 2rem;
-            font-size: 1rem;
-            font-weight: 500;
-            letter-spacing: .01em;
         }
 
         #loader .status {
@@ -475,29 +459,6 @@
         .class-card.is-last {
             border: 1.5px solid var(--last-border);
             box-shadow: 0 0 6px rgba(245, 158, 11, .15);
-        }
-
-        .class-card.is-ending-soon {
-            border: 1.5px solid #f87171;
-            box-shadow: 0 0 10px rgba(248, 113, 113, .3);
-            animation: ending-pulse 1s ease-in-out infinite;
-        }
-
-        @keyframes ending-pulse {
-            0%, 100% { box-shadow: 0 0 8px rgba(248, 113, 113, .3); }
-            50% { box-shadow: 0 0 18px rgba(248, 113, 113, .6); }
-        }
-
-        .cc-countdown {
-            font-size: .6rem;
-            font-weight: 700;
-            color: #f87171;
-            letter-spacing: .5px;
-        }
-
-        .list-card.is-ending-soon {
-            border-left-color: #f87171 !important;
-            animation: ending-pulse 1s ease-in-out infinite;
         }
 
         .class-card .last-badge {
@@ -957,24 +918,6 @@
                 max-width: 200px;
                 font-size: .65rem;
             }
-
-            .class-card .cc-time {
-                font-size: .7rem;
-                font-weight: 700;
-                color: var(--text);
-                opacity: 1;
-            }
-
-            .class-card .cc-name {
-                font-size: .78rem;
-            }
-
-            .list-card .time-col {
-                font-size: .75rem;
-                font-weight: 700;
-                color: var(--text);
-                min-width: 52px;
-            }
         }
 
         /* === BACK BUTTON === */
@@ -1081,93 +1024,36 @@
         }
 
         /* === FUN ADS (in-schedule) === */
-        /* === INLINE GIF AD (between lessons) === */
-        .inline-gif-ad {
+        .fun-ad-card {
             border-radius: 7px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            background: var(--card2);
-            display: flex;
-            flex-direction: row;
-            align-items: stretch;
-            gap: 0;
-            cursor: pointer;
-            transition: border-color .15s, transform .1s;
-            position: relative;
-        }
-
-        .inline-gif-ad:hover {
-            border-color: var(--accent);
-            transform: scale(1.01);
-        }
-
-        .inline-gif-ad img {
-            width: 68px;
-            min-width: 68px;
-            object-fit: cover;
-            display: block;
-            flex-shrink: 0;
-        }
-
-        .inline-gif-ad .iga-body {
-            padding: .35rem .45rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: .1rem;
-            flex: 1;
-            min-width: 0;
-        }
-
-        .inline-gif-ad .iga-tag {
-            font-size: .42rem;
+            padding: .35rem .5rem;
+            background: rgba(99, 102, 241, .06);
+            border: 1px dashed var(--border);
+            font-size: .6rem;
             color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: .5px;
+            line-height: 1.35;
         }
 
-        .inline-gif-ad .iga-title {
-            font-size: .63rem;
+        .fun-ad-card .fad-title {
             font-weight: 700;
-            color: var(--text);
-            line-height: 1.2;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            color: var(--accent-light);
+            font-size: .6rem;
         }
 
-        .inline-gif-ad .iga-sub {
-            font-size: .55rem;
+        .fun-ad-card .fad-body {
             color: var(--text-muted);
-            line-height: 1.2;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
-        .inline-gif-ad .iga-cta {
-            margin-top: .2rem;
-            font-size: .52rem;
-            font-weight: 700;
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            padding: .15rem .35rem;
-            cursor: pointer;
-            align-self: flex-start;
-            font-family: inherit;
-            white-space: nowrap;
+        .fun-ad-card .fad-sub {
+            font-size: .5rem;
+            color: var(--text-dim);
+            font-style: italic;
         }
 
-        .inline-gif-ad .iga-cta:hover {
-            background: var(--accent-light);
-        }
-
-        @media(max-width:750px) {
-            .inline-gif-ad img { width: 56px; min-width: 56px; }
-            .inline-gif-ad .iga-title { font-size: .6rem; }
-            .inline-gif-ad .iga-sub { font-size: .5rem; }
+        .fun-ad-card .fad-tag {
+            font-size: .45rem;
+            color: var(--text-dim);
+            float: right;
         }
 
         .ads-toggle {
@@ -1193,6 +1079,16 @@
             background: rgba(245, 158, 11, .08);
         }
 
+        @media(max-width:750px) {
+            .fun-ad-card {
+                font-size: .55rem;
+                padding: .3rem .4rem;
+            }
+
+            .fun-ad-card .fad-title {
+                font-size: .55rem;
+            }
+        }
 
         /* === PAYWALL MODAL === */
         .paywall-overlay {
@@ -1542,178 +1438,6 @@
                 opacity: 1
             }
         }
-
-        /* === LOADER GIF ADS === */
-        .gif-ad {
-            position: fixed;
-            z-index: 100;
-            background: linear-gradient(135deg, #1a0030, #300010);
-            border: 2px solid #f0f;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 0 30px rgba(255, 0, 255, .3), 0 4px 20px rgba(0, 0, 0, .5);
-            animation: ad-appear .4s ease-out, gif-ad-float 3s ease-in-out infinite;
-            cursor: default;
-            max-width: 280px;
-            width: 250px;
-            transition: transform .1s;
-        }
-
-        .gif-ad:hover {
-            transform: scale(1.02);
-        }
-
-        .gif-ad img {
-            width: 100%;
-            display: block;
-            border-radius: 10px 10px 0 0;
-        }
-
-        .gif-ad .gif-ad-text {
-            padding: .4rem .5rem;
-            font-size: .7rem;
-            font-weight: 700;
-            color: #ff0;
-            text-align: center;
-            line-height: 1.3;
-            text-shadow: 0 0 8px rgba(255, 255, 0, .3);
-        }
-
-        .gif-ad .gif-ad-sub {
-            font-size: .55rem;
-            color: #f0f;
-            font-weight: 400;
-            margin-top: 2px;
-        }
-
-        .gif-ad .gif-ad-cta {
-            display: block;
-            text-align: center;
-            padding: .3rem;
-            background: linear-gradient(90deg, #f0f, #ff6600);
-            color: #000;
-            font-size: .6rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: .5px;
-            cursor: pointer;
-            animation: cursed-rainbow 2s linear infinite;
-            background-size: 400%;
-        }
-
-        .gif-ad .gif-ad-close {
-            position: absolute;
-            top: 2px;
-            right: 4px;
-            color: rgba(255, 255, 255, .5);
-            font-size: 1rem;
-            cursor: pointer;
-            transition: color .1s;
-            z-index: 50;
-            padding: 8px 10px;
-            line-height: 1;
-            background: none;
-            border: none;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-            user-select: none;
-        }
-
-        .gif-ad .gif-ad-close:hover {
-            color: #fff;
-        }
-
-        .gif-ad .gif-ad-close:active {
-            color: #f0f;
-        }
-
-        .gif-ad .gif-ad-tag {
-            position: absolute;
-            top: 4px;
-            left: 8px;
-            font-size: .45rem;
-            color: rgba(255, 255, 255, .25);
-            z-index: 5;
-        }
-
-        @keyframes gif-ad-float {
-
-            0%,
-            100% {
-                transform: translateY(0px)
-            }
-
-            50% {
-                transform: translateY(-6px)
-            }
-        }
-
-        .gif-ad.dragging {
-            animation: none !important;
-            opacity: .9;
-        }
-
-        /* Mobile: horizontal banner at bottom */
-        @media(max-width:750px) {
-            .gif-ad {
-                max-width: none;
-                width: calc(100% - 20px) !important;
-                left: 10px !important;
-                right: 10px;
-                bottom: 10px !important;
-                top: auto !important;
-                display: flex;
-                flex-direction: row;
-                align-items: stretch;
-                border-radius: 10px;
-            }
-
-            .gif-ad img {
-                width: 100px;
-                min-width: 100px;
-                height: auto;
-                border-radius: 10px 0 0 10px;
-                object-fit: cover;
-            }
-
-            .gif-ad .gif-ad-text {
-                font-size: .65rem;
-                padding: .3rem .5rem;
-                text-align: left;
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-            }
-
-            .gif-ad .gif-ad-sub {
-                font-size: .5rem;
-            }
-
-            .gif-ad .gif-ad-cta {
-                writing-mode: vertical-lr;
-                font-size: .55rem;
-                padding: .3rem .2rem;
-                border-radius: 0 10px 10px 0;
-                min-width: 28px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .gif-ad .gif-ad-close {
-                top: 2px;
-                right: 2px;
-                font-size: 1rem;
-                padding: 10px 12px;
-            }
-
-            .gif-ad .gif-ad-tag {
-                top: 2px;
-                left: 4px;
-                font-size: .4rem;
-            }
-        }
     </style>
 </head>
 
@@ -1743,9 +1467,6 @@
             <div id="fetchError" class="error-msg" style="display:none"></div>
         </div>
     </div>
-
-    <!-- GIF AD CONTAINER (spawned by JS) -->
-    <div id="gifAdContainer"></div>
 
     <div id="app" style="display:none;">
         <header>
@@ -1856,12 +1577,10 @@
             WIM: { name: 'Wydz. Inzynierii Mechanicznej', lato: 'https://www.wim.wat.edu.pl/wp-content/uploads/rozklady/lato', zima: 'https://www.wim.wat.edu.pl/wp-content/uploads/rozklady/zima' }
         };
 
-        // IS_LOCAL = http://localhost or http://127.0.0.1 (NOT file://)
-        const IS_LOCAL = location.protocol.startsWith('http') && ['localhost', '127.0.0.1'].includes(location.hostname);
         const CORS_PROXIES = [
+            url => 'https://corsproxy.io/?' + encodeURIComponent(url),
             url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
-            url => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url),
-            ...(IS_LOCAL ? [url => 'https://corsproxy.io/?' + encodeURIComponent(url)] : []),
+            url => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url)
         ];
 
         function detectDepartment(groupName) {
@@ -1877,52 +1596,31 @@
             return (month >= 2 && month <= 8) ? 'lato' : 'zima';
         }
 
-        // Stored when professor is explicitly selected from autocomplete
-        let selectedProfessorInfo = null; // { deptKey, file }
-
-        async function fetchWithProxy(proxy, planUrl, timeout) {
-            const ctrl = new AbortController();
-            const timer = setTimeout(() => ctrl.abort(), timeout);
-            try {
-                const resp = await fetch(proxy(planUrl), { signal: ctrl.signal });
-                clearTimeout(timer);
-                if (!resp.ok) throw new Error('HTTP ' + resp.status);
-                const buf = await resp.arrayBuffer();
-                const html = new TextDecoder('windows-1250').decode(buf);
-                if (html.includes('<table') || html.includes('<TABLE')) return html;
-                throw new Error('Brak tabeli w odpowiedzi');
-            } catch (e) {
-                clearTimeout(timer);
-                throw e.name === 'AbortError' ? new Error('Timeout') : e;
-            }
-        }
-
         async function fetchPlanFromWAT(groupName, semester) {
-            let planUrl;
+            const dept = detectDepartment(groupName);
+            if (!dept) throw new Error('Nieznany wydzial dla grupy "' + groupName + '". Sprobuj zaladowac plik recznie.');
+            const baseUrl = dept[semester];
+            if (!baseUrl) throw new Error('Brak URL dla semestru: ' + semester);
+            const planUrl = baseUrl + '/' + groupName + '.htm';
 
-            // Professor mode: use stored dept info
-            if (selectedProfessorInfo) {
-                const { deptKey, file } = selectedProfessorInfo;
-                selectedProfessorInfo = null;
-                const dept = DEPARTMENTS[deptKey];
-                if (!dept) throw new Error('Nieznany wydzial nauczyciela.');
-                const baseUrl = dept[semester];
-                if (!baseUrl) throw new Error('Brak URL dla semestru: ' + semester);
-                planUrl = baseUrl + '/' + file;
-            } else {
-                const dept = detectDepartment(groupName);
-                if (!dept) throw new Error('Nieznany wydzial dla grupy "' + groupName + '". Sprobuj zaladowac plik recznie.');
-                const baseUrl = dept[semester];
-                if (!baseUrl) throw new Error('Brak URL dla semestru: ' + semester);
-                planUrl = baseUrl + '/' + groupName + '.htm';
+            const errors = [];
+            for (let i = 0; i < CORS_PROXIES.length; i++) {
+                const proxyUrl = CORS_PROXIES[i](planUrl);
+                try {
+                    const ctrl = new AbortController();
+                    const timer = setTimeout(() => ctrl.abort(), 12000);
+                    const resp = await fetch(proxyUrl, { signal: ctrl.signal });
+                    clearTimeout(timer);
+                    if (!resp.ok) { errors.push('HTTP ' + resp.status); continue; }
+                    const buf = await resp.arrayBuffer();
+                    const html = new TextDecoder('windows-1250').decode(buf);
+                    if (html.includes('<table') || html.includes('<TABLE')) return html;
+                    errors.push('Odpowiedz nie zawiera tabeli');
+                } catch (e) {
+                    errors.push(e.name === 'AbortError' ? 'Timeout' : e.message);
+                }
             }
-
-            // Try all proxies in parallel — take first success
-            try {
-                return await Promise.any(CORS_PROXIES.map(p => fetchWithProxy(p, planUrl, 12000)));
-            } catch (e) {
-                throw new Error('Nie udalo sie pobrac planu przez żaden proxy. Sprawdz nazwe grupy lub zaladuj plik recznie.');
-            }
+            throw new Error('Nie udalo sie pobrac planu (' + errors.join('; ') + '). Sprawdz nazwe grupy lub zaladuj plik recznie.');
         }
 
         // ============================================================
@@ -1977,59 +1675,62 @@
             if (planListCache[cacheKey]) return planListCache[cacheKey];
             const dept = DEPARTMENTS[deptKey];
             if (!dept || !dept[semester]) return null;
-            const baseUrl = dept[semester];
+            const baseUrl = dept[semester] + '/';
 
-            function parseHtml(html) {
-                const result = { groups: [], professors: [] };
-                if (html.includes('<data>')) {
-                    const parseSec = (tag) => {
+            // Proxies: allorigins JSON wrapper works best for WAT XML index
+            const listProxies = [
+                { url: 'https://api.allorigins.win/get?url=' + encodeURIComponent(baseUrl), json: true },
+                { url: 'https://corsproxy.io/?' + encodeURIComponent(baseUrl), json: false },
+                { url: 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(baseUrl), json: false },
+            ];
+
+            for (const p of listProxies) {
+                try {
+                    const ctrl = new AbortController();
+                    const timer = setTimeout(() => ctrl.abort(), 12000);
+                    const resp = await fetch(p.url, { signal: ctrl.signal });
+                    clearTimeout(timer);
+                    if (!resp.ok) continue;
+
+                    let xml;
+                    if (p.json) {
+                        const data = await resp.json();
+                        xml = data.contents || '';
+                    } else {
+                        const buf = await resp.arrayBuffer();
+                        xml = new TextDecoder('windows-1250').decode(buf);
+                    }
+                    if (!xml || xml.length < 50) continue;
+
+                    const result = { groups: [], professors: [] };
+                    const parseTag = (tag) => {
                         const items = [];
-                        const idx = html.indexOf('<' + tag);
-                        if (idx === -1) return items;
-                        const sec = html.substring(idx);
-                        const re = /href="([^"]*)"[\s\S]*?text="([^"]*)"/g;
+                        const re = new RegExp('<' + tag + '\\s+href="([^"]*)"\\s+text="([^"]*)"', 'g');
                         let m;
-                        while ((m = re.exec(sec)) !== null) {
-                            if (m[1].endsWith('.htm') || m[1].endsWith('.html'))
-                                items.push({ name: m[2], file: m[1] });
-                        }
+                        while ((m = re.exec(xml)) !== null) items.push({ name: m[2].trim(), file: m[1] });
                         return items;
                     };
-                    result.groups = parseSec('gro');
-                    result.professors = parseSec('lec');
-                } else {
-                    const re = /href="([^"]*\.htm[l]?)"/gi;
-                    let m;
-                    while ((m = re.exec(html)) !== null) {
-                        const name = m[1].replace(/\.htm[l]?$/i, '');
-                        if (name && !name.includes('/'))
-                            result.groups.push({ name, file: m[1] });
+                    result.groups = parseTag('gro');
+                    if (!result.groups.length) result.groups = parseTag('gru');
+                    result.professors = parseTag('lec');
+
+                    // Fallback: HTML links
+                    if (!result.groups.length && !result.professors.length) {
+                        const re = /href="([^"]*\.htm[l]?)"/gi;
+                        let m;
+                        while ((m = re.exec(xml)) !== null) {
+                            const name = m[1].replace(/\.htm[l]?$/i, '');
+                            if (name && !name.includes('/')) result.groups.push({ name, file: m[1] });
+                        }
                     }
-                }
-                return result;
+
+                    if (result.groups.length > 0 || result.professors.length > 0) {
+                        planListCache[cacheKey] = result;
+                        return result;
+                    }
+                } catch (e) { continue; }
             }
-
-            // Try all proxies in parallel
-            const tryProxy = async (proxy) => {
-                const ctrl = new AbortController();
-                const timer = setTimeout(() => ctrl.abort(), 10000);
-                try {
-                    const resp = await fetch(proxy(baseUrl + '/'), { signal: ctrl.signal });
-                    clearTimeout(timer);
-                    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-                    const buf = await resp.arrayBuffer();
-                    const html = new TextDecoder('windows-1250').decode(buf);
-                    const result = parseHtml(html);
-                    if (result.groups.length > 0 || result.professors.length > 0) return result;
-                    throw new Error('Brak danych');
-                } catch (e) { clearTimeout(timer); throw e; }
-            };
-
-            try {
-                const result = await Promise.any(CORS_PROXIES.map(p => tryProxy(p)));
-                planListCache[cacheKey] = result;
-                return result;
-            } catch (e) { return null; }
+            return null;
         }
 
         // ============================================================
@@ -2044,7 +1745,7 @@
             { t: 'Spotted WAT', b: 'Na przerwie ktoś powiedział „mam ochotę na coś twardego i gorącego”. Myślałem, że o kawie. Okazało się, że o kawie. Byłem rozczarowany.', s: '#nocneZarcie' },
             { t: 'Spotted WAT', b: 'Wyznanie wieczorne: Zamiast się uczyć do jutrzejszego kolosa, leżę i wyobrażam sobie jak by to było, gdyby ta ładna z pierwszego rzędu usiadła mi na twarzy. Sesja mnie zabija.', s: '#bud57 #karma' },
             { t: 'Spotted WAT', b: 'Gdyby oceny na WAT były jak orgazmy – to ja ciągle jestem w fazie przedorgazmicznej.', s: '#poranneWokale' },
-            { t: 'Spotted WAT', b: 'Szukam w\u0142a\u015bciciela suszarki kt\u00f3ra dzia\u0142a jak silnik odrzutowy \u2014 akad. 4. Budzimy si\u0119 co noc my\u015bl\u0105c \u017ce to alarmTa goth dziewczyna z długimi czarnymi włosami i czerwoną szminką na matmie… Jak gryzie długopis, to mam wrażenie, że zaraz ugryzie coś zupełnie innego. I bardzo chętnie bym jej na to pozwolił.', s: '#cisza_nocna' },
+            { t: 'Spotted WAT', b: 'Ta goth dziewczyna z długimi czarnymi włosami i czerwoną szminką na matmie… Jak gryzie długopis, to mam wrażenie, że zaraz ugryzie coś zupełnie innego. I bardzo chętnie bym jej na to pozwolił.', s: '#cisza_nocna' },
             { t: 'Spotted WAT', b: 'Ta goth dziewczyna z WEL, co zawsze ma czarne lakierowane paznokcie… Wyobrażam sobie te paznokcie na swoich plecach i od razu tracę wątek na laboratoriach.', s: '#s204 #kotki' },
             { t: 'Spotted WAT', b: 'Ta goth z WEL w czarnych lateksowych legginsach…', s: '#bud57' },
             { t: 'Spotted WAT', b: 'Profesjonalne „odstresowywanie” przed kolokwium z analizy. Goth styl, czarne lateksowe rękawiczki, kolczyk w języku. Cena: kawa + dyskrecja', s: '#sto\u0142\u00f3wka' },
@@ -2057,6 +1758,7 @@
             { t: 'Spotted WAT', b: 'Sprzedam duszę + dziewictwo (ponownie) w zamian za chłopaka, który podczas seksu będzie mi czytał skrypt z ukłądów analogowych niskim, mrocznym głosem.', s: '#UKA' },
         ];
 
+
         function getFunAd() {
             const ad = FUN_ADS_POOL[Math.floor(Math.random() * FUN_ADS_POOL.length)];
             let body = ad.b;
@@ -2064,21 +1766,10 @@
             return { t: ad.t, b: body, s: ad.s };
         }
 
-        function inlineGifAdHtml() {
-            const gif = GIF_FILES[Math.floor(Math.random() * GIF_FILES.length)];
-            const text = GIF_AD_TEXTS[Math.floor(Math.random() * GIF_AD_TEXTS.length)];
-            return `<div class="inline-gif-ad" onclick="void(0)">` +
-                `<img src="${gif}" alt="ad" loading="lazy">` +
-                `<div class="iga-body">` +
-                `<div class="iga-tag">reklama</div>` +
-                `<div class="iga-title">${text.t}</div>` +
-                `<div class="iga-sub">${text.s}</div>` +
-                `<button class="iga-cta">${text.c}</button>` +
-                `</div></div>`;
+        function funAdHtml() {
+            const ad = getFunAd();
+            return '<div class="fun-ad-card"><span class="fad-tag">reklama</span><div class="fad-title">' + ad.t + '</div><div class="fad-body">' + ad.b + '</div><div class="fad-sub">' + ad.s + '</div></div>';
         }
-
-        // Keep funAdHtml as alias for back-compat
-        function funAdHtml() { return inlineGifAdHtml(); }
 
         function getTypeName(t) {
             const map = { 'w': 'Wyklad', 'W': 'Wyklad', 'L': 'Lab', 'S': 'Seminarium', 'P': 'Projekt', 'E': 'Egzamin', 'Ep': 'Egz.popr.', 'Z': 'Zaliczenie', 'Zp': 'Zal.popr.' };
@@ -2384,12 +2075,7 @@
                 if (curMin >= t.sm && curMin <= t.em) { slotStatus = k; break; }
             }
 
-            const now2 = new Date();
-            const curSec = now2.getSeconds();
-            const endingSoon = !!(current && (current.timeEndMin - curMin) <= 1 && (current.timeEndMin - curMin) >= 0);
-            const secondsLeft = current && endingSoon ? Math.max(0, (current.timeEndMin - curMin) * 60 - curSec) : 0;
-
-            return { current, progress, next, onBreak, breakEnd, slotStatus, today, curMin, todayClasses, endingSoon, secondsLeft };
+            return { current, progress, next, onBreak, breakEnd, slotStatus, today, curMin, todayClasses };
         }
 
         function formatNowInfo(info) {
@@ -2448,23 +2134,9 @@
             updateNow();
             render();
             setInterval(() => { updateNow(); render(); }, 60000);
-
-            // 1-second tick for ending-soon countdown
-            setInterval(() => {
-                if (!nowInfo) return;
-                const wasEndingSoon = nowInfo.endingSoon;
-                updateNow();
-                if (nowInfo.endingSoon !== wasEndingSoon) {
-                    render(); // state changed — full re-render
-                } else if (nowInfo.endingSoon) {
-                    const el = document.getElementById('card-countdown');
-                    if (el) el.textContent = nowInfo.secondsLeft + 's';
-                }
-            }, 1000);
         }
 
         function updateNow() {
-            if (!data) return;
             nowInfo = getNowInfo(data.allClasses);
             document.getElementById('nowInfo').textContent = formatNowInfo(nowInfo);
         }
@@ -2537,16 +2209,11 @@
         function cardSmall(c, isToday) {
             const bg = hex2rgba(c.color, .18);
             const isNow = isToday && nowInfo && nowInfo.current && nowInfo.current.slot === c.slot && nowInfo.current.code === c.code;
-            const isEndingSoon = isNow && nowInfo && nowInfo.endingSoon;
-            let cls = 'class-card';
-            if (isNow) cls += isEndingSoon ? ' is-now is-ending-soon' : ' is-now';
-            else if (c.isLast) cls += ' is-last';
+            let cls = 'class-card'; if (isNow) cls += ' is-now'; else if (c.isLast) cls += ' is-last';
             let h = `<div class="${cls}" style="background:${bg}" onclick="openSubjectModal('${c.code}')">`;
-            if (isNow && !isEndingSoon) { /* badge via CSS */ }
+            if (isNow) { /* badge via CSS */ }
             else if (c.isLast) h += `<div class="last-badge">${c.lastLabel}</div>`;
-            h += `<div class="cc-time">${c.timeStart}-${c.timeEnd}`;
-            if (isEndingSoon) h += ` <span class="cc-countdown" id="card-countdown">${nowInfo.secondsLeft}s</span>`;
-            h += `</div>`;
+            h += `<div class="cc-time">${c.timeStart}-${c.timeEnd}</div>`;
             h += `<div class="cc-name">${c.name}</div>`;
             h += `<div class="cc-meta"><span class="type-badge" style="background:${hex2rgba(c.color, .35)}">${c.typeName}</span>`;
             if (c.halfGroup) h += `<span class="half-badge">50%</span>`;
@@ -2797,9 +2464,9 @@
         const FAKE_ADS = [
             { t: 'GOR\u0104CE SINGIELKI w koszarach!', b: '3 km od Twojej jednostki wojskowej! Czekaj\u0105 na kaprala!', c: 'POZNAJ JE' },
             { t: 'ZAROB 50000z\u0142 DZIENNIE', b: 'Wystarczy rzuci\u0107 studia na WAT! Ten prosty trik...', c: 'DOWIEDZ SI\u0118' },
-            { t: 'WYKRYTO 37 WIRUS\u00d3W!', b: 'Tw\u00f3j laptop WCY jest zagro\u017cony! Kliknij aby naprawi\u0107!', c: 'SKANUJ TERAZ' },
-            { t: 'Profesorowie NIENAWIDZ\u0104 tego triku!', b: 'Zdaj egzamin bez nauki w 24h dzi\u0119ki tej metodzie', c: 'SPRAWD\u0179' },
-            { t: 'iPhone 47 za 1z\u0142!', b: 'Zosta\u0142y 2 sztuki! Oferta wygasa za 0:03:22', c: 'KUP TERAZ' },
+            { t: 'WYKRYTO 21377 WIRUS\u00d3W!', b: 'Tw\u00f3j laptop WEL jest zagro\u017cony! Kliknij aby naprawi\u0107!', c: 'SKANUJ TERAZ' },
+            { t: 'Profesorowie NIENAWIDZ\u0104 tego triku!', b: 'Zdaj egzamin bez nauki w 3h dzi\u0119ki tej metodzie', c: 'SPRAWD\u0179' },
+            { t: 'Samsung S26 za 1z\u0142!', b: 'Zosta\u0142y 2 sztuki! Oferta wygasa za 0:03:22', c: 'KUP TERAZ Z KODEM SEX69' },
             { t: 'NOWY PLAN ZAJ\u0118\u0106 BEZ PONIEDZIA\u0141K\u00d3W', b: 'Rektor potwierdzi\u0142! Kliknij aby aktywowa\u0107 nowy plan', c: 'AKTYWUJ' },
             { t: 'Dziekanat OTWARTY 24/7!', b: 'Nowa reforma szkolnictwa - dziekanat non-stop!', c: 'SZCZEG\u00d3\u0141Y' },
             { t: 'DARMOWE OBIADY na sto\u0142\u00f3wce!', b: 'Wystarczy poda\u0107 ten kod przy kasie: ...', c: 'POKA\u017b KOD' },
@@ -2978,8 +2645,6 @@
             deactivateCursedMode();
             window.history.replaceState({}, '', window.location.pathname);
             document.title = 'Plan Zajec WAT';
-            // Restart gif ads on the loader page
-            startGifAds();
         };
 
         // ============================================================
@@ -3037,15 +2702,7 @@
 
         function selectAc(idx) {
             if (idx >= 0 && idx < acItems.length) {
-                const item = acItems[idx];
-                // If professor mode, store dept+file so fetchPlanFromWAT can use correct URL
-                if (searchType === 'professor' && item.deptKey && item.file) {
-                    selectedProfessorInfo = { deptKey: item.deptKey, file: item.file };
-                    grpInp.value = item.name; // show professor name
-                } else {
-                    selectedProfessorInfo = null;
-                    grpInp.value = item.file ? item.file.replace(/\.htm[l]?$/i, '') : item.name;
-                }
+                grpInp.value = acItems[idx].file ? acItems[idx].file.replace(/\.htm[l]?$/i, '') : acItems[idx].name;
                 closeAc();
             }
         }
@@ -3059,8 +2716,6 @@
 
         async function triggerAc() {
             const val = grpInp.value.trim();
-            const sem = document.getElementById('semesterSelect').value;
-
             if (val.length < 1) {
                 // Show all departments as hints
                 const hints = Object.keys(DEPARTMENTS).map(k => ({ name: k, tag: DEPARTMENTS[k].name, file: '' }));
@@ -3068,49 +2723,8 @@
                 return;
             }
 
-            // --- PROFESSOR MODE: search across ALL departments ---
-            if (searchType === 'professor') {
-                if (val.length < 2) {
-                    acDrop.innerHTML = '<div class="ac-loading">Wpisz min. 2 znaki...</div>';
-                    acDrop.classList.add('open');
-                    return;
-                }
-                // Fetch all departments in parallel if not cached
-                const deptKeys = Object.keys(DEPARTMENTS);
-                const needsFetch = deptKeys.filter(k => !planListCache[k + '_' + sem]);
-                if (needsFetch.length > 0 && !acFetching) {
-                    acFetching = true;
-                    acDrop.innerHTML = '<div class="ac-loading">Ladowanie nauczycieli ze wszystkich wydzialow...</div>';
-                    acDrop.classList.add('open');
-                    await Promise.all(needsFetch.map(k => fetchPlanList(k, sem)));
-                    acFetching = false;
-                }
-                // Search across all departments
-                const upper = val.toUpperCase();
-                const allResults = [];
-                for (const dk of deptKeys) {
-                    const list = planListCache[dk + '_' + sem];
-                    if (list && list.professors) {
-                        list.professors.forEach(p => {
-                            if (p.name.toUpperCase().includes(upper)) {
-                                allResults.push({ ...p, tag: dk, deptKey: dk });
-                            }
-                        });
-                    }
-                }
-                // Sort: exact start match first, then alphabetical
-                allResults.sort((a, b) => {
-                    const aStarts = a.name.toUpperCase().startsWith(upper) ? 0 : 1;
-                    const bStarts = b.name.toUpperCase().startsWith(upper) ? 0 : 1;
-                    if (aStarts !== bStarts) return aStarts - bStarts;
-                    return a.name.localeCompare(b.name);
-                });
-                renderAc(allResults);
-                return;
-            }
-
-            // --- GROUP MODE: existing logic ---
             const deptKey = detectDeptKey(val);
+            const sem = document.getElementById('semesterSelect').value;
 
             if (deptKey && !acFetching) {
                 const cacheKey = deptKey + '_' + sem;
@@ -3123,9 +2737,10 @@
                 }
                 const list = planListCache[cacheKey];
                 if (list) {
+                    const source = searchType === 'professor' ? list.professors : list.groups;
                     const upper = val.toUpperCase();
-                    const filtered = list.groups.filter(it => it.name.toUpperCase().includes(upper))
-                        .map(it => ({ ...it, tag: '' }));
+                    const filtered = source.filter(it => it.name.toUpperCase().includes(upper))
+                        .map(it => ({ ...it, tag: searchType === 'professor' ? 'nauczyciel' : '' }));
                     renderAc(filtered);
                 } else {
                     acDrop.innerHTML = '<div class="ac-loading">Nie udalo sie pobrac listy</div>';
@@ -3234,8 +2849,8 @@
                 return;
             }
 
-            // Try local file (for development / same-directory hosting — localhost only)
-            if (IS_LOCAL) for (const f of [location.pathname.split('/').pop().replace('.html', '.htm'), 'WEL24EQ3S1.html', 'WEL24EQ3S1.htm']) {
+            // Try local file (for development / same-directory hosting)
+            for (const f of [location.pathname.split('/').pop().replace('.html', '.htm'), 'WEL24EQ3S1.html', 'WEL24EQ3S1.htm']) {
                 if (!f) continue;
                 try {
                     status.textContent = '';
@@ -3251,421 +2866,6 @@
             status.textContent = '';
             document.getElementById('groupInput').focus();
         })();
-        // ============================================================
-        // GIF ADS ON LOADER PAGE
-        // ============================================================
-        const GIF_FILES = [
-            'gifs/grok-video-02e96248-e253-4d9d-b068-536972277192.gif',
-            'gifs/grok-video-4eb359f8-88ab-479e-af97-7a27c48f3934.gif',
-            'gifs/grok-video-56bb90d0-0ed8-4e0d-bd6a-17c7a9c570d1.gif',
-            'gifs/grok-video-7563e749-87c2-46b8-b50a-4d6f9303b0b6.gif',
-            'gifs/grok-video-78fbb24f-6a4d-415f-91d6-f8e9fc8ecbbf.gif',
-            'gifs/grok-video-7ff01ca3-e1dc-45b3-9b9b-84dee0dfbbd3.gif',
-            'gifs/grok-video-8d7cf7d0-39b7-4e85-8fd6-556cedabd7b1.gif',
-            'gifs/grok-video-9b079dee-12e8-4761-84b6-d3a5afef1a52.gif',
-            'gifs/grok-video-9b12d79c-12e5-4e14-be2a-e1716bf56a2c.gif',
-            'gifs/grok-video-bc89aed1-de4d-42f3-b486-aa907ca697eb.gif',
-            'gifs/grok-video-c15f095a-d7cc-40ee-b688-0c42639456d1.gif',
-            'gifs/grok-video-fffbaffb-f660-49b0-b8f6-b671fdca75c3.gif',
-            'gifs/grok-video-bbcee2c4-c29b-4f9a-b748-e0a878c5be0a.gif',
-            'gifs/grok-video-ca8d637f-b58d-41b8-9bf9-8764d9d9baa4.gif',
-            'gifs/grok-video-cca9fb3a-244b-4a8e-ab73-4e9c9a99a768.gif',
-            'gifs/grok-video-d6f57710-d22f-4136-8369-507b10b8cc19.gif',
-            'gifs/grok-video-d7bb3ce9-406b-4621-ae01-700c282a211a.gif',
-            'gifs/grok-video-d31c5702-c07a-4e8e-9800-efec70d708f8.gif',
-            'gifs/grok-video-d79cff5c-1919-45f1-994d-4c3005c118c5.gif',
-            'gifs/grok-video-da81799a-6e3c-49fd-9377-3a6793ac302b.gif',
-            'gifs/grok-video-e3d62ee5-d02f-4a48-84ca-a584f7c063d4.gif',
-            'gifs/grok-video-e4a10823-d7d7-4197-8bfa-d4bc3809edb7.gif',
-            'gifs/grok-video-e728bb5b-2893-44ac-a898-8d6bdc3671ad.gif',
-            'gifs/grok-video-ea3f23f8-9ecd-468f-9932-38adf678b8bd.gif',
-            'gifs/grok-video-fbf87caa-e4f0-4b4c-a700-4b6b681b0e23.gif',
-            'gifs/grok-video-fe66d0f5-b414-41fb-b748-db9985c73c9f.gif',
-            'gifs/grok-video-ff16c0cc-e1ac-4e95-9bec-303f57e14c75.gif',
-            'gifs/a91ca023-ddce-489b-ba22-01671634c34c.gif',
-            'gifs/grok-video-0f69d80f-07a2-4d66-880f-0249427b03c4.gif',
-            'gifs/grok-video-1f4494c9-24a6-4d24-8f58-f3e0440baf1d.gif',
-            'gifs/grok-video-2bddc80a-6a11-4177-8363-98f8c5af9d4f.gif',
-            'gifs/grok-video-2d005615-2238-47d5-a109-017357a99987.gif',
-            'gifs/grok-video-3d5e649b-ac34-4079-a0d3-8f9b35c94c57.gif',
-            'gifs/grok-video-3f6304ba-4126-4bbe-a5c2-579a76494a65.gif',
-            'gifs/grok-video-4c40915f-bbfd-4567-a953-2002ee346118.gif',
-            'gifs/grok-video-4e092d1e-79dc-4360-b149-ae4bc803adc8.gif',
-            'gifs/grok-video-6cf7d5a3-0f36-4ebe-b777-91334741065d.gif',
-            'gifs/grok-video-7cafda2f-70c6-4e3f-9a67-d05c637a89cc.gif',
-            'gifs/grok-video-7f627872-3f13-4c17-91e6-c9bc29f900bd.gif',
-            'gifs/grok-video-8b3c0607-3677-41dc-87e6-7afe1a818f68.gif',
-            'gifs/grok-video-9aaef00f-ea7f-4b23-ae0a-e132ed19ed59.gif',
-            'gifs/grok-video-9bbe31d1-ce36-4a90-a366-7a7db14b2dc5.gif',
-            'gifs/grok-video-9c2e6459-b5b4-4786-8e2e-c18cb802e0ec.gif',
-            'gifs/grok-video-14a7863c-33ac-48a8-b499-08da8bc094c4.gif',
-            'gifs/grok-video-15e91d63-ad81-4695-92d7-0ecf50811767.gif',
-            'gifs/grok-video-22fb315d-d585-4569-af55-9abdcee04dd5.gif',
-            'gifs/grok-video-045c421f-e946-4557-a18a-e0f69c05f4dc.gif',
-            'gifs/grok-video-54afc374-1629-423d-90da-b18cb6e225eb.gif',
-            'gifs/grok-video-56d9358f-2233-43d1-be06-17f82266fc55.gif',
-            'gifs/grok-video-81af7183-022c-4d18-bea0-3fd290f43e48.gif',
-            'gifs/grok-video-176d3386-7d20-48ac-9caf-6e283ca61677.gif',
-            'gifs/grok-video-367fb903-7d13-4110-a343-df7cb679a94d.gif',
-            'gifs/grok-video-558aeffc-d167-4a73-be08-37f71466029e.gif',
-            'gifs/grok-video-680e2a6f-062d-4e75-8990-2a87766bec68.gif',
-            'gifs/grok-video-782c23e8-b1e1-40fc-b282-92d843223fad.gif',
-            'gifs/grok-video-958ce0d1-1f4a-4761-ba21-634318917cb5.gif',
-            'gifs/grok-video-3111f6cf-8c44-4d8c-837b-c5747a393db5.gif',
-            'gifs/grok-video-4917b0b8-d141-40ca-a276-ebc8d586d4ab.gif',
-            'gifs/grok-video-5094dde0-9439-4bd7-bd80-06d6bd576cf6.gif',
-            'gifs/grok-video-7835e8d8-fa09-4478-839c-61588a83818f.gif',
-            'gifs/grok-video-71231a7d-6fe1-411e-b091-33c04ed6a802.gif',
-            'gifs/grok-video-954724b2-1eb9-4ad5-84a3-175b7d622502.gif',
-            'gifs/grok-video-0969934b-d590-4ac3-a4c1-f90736ef474c.gif',
-            'gifs/grok-video-3387116c-2031-4361-8dfd-e8aa7ef75f9d.gif',
-            'gifs/grok-video-3648653d-b145-421c-8310-711d2b74ed21.gif',
-            'gifs/grok-video-a166312b-97b6-4ef4-8032-9a3bf05be958.gif',
-            'gifs/grok-video-b6360b7d-e9e6-4120-9fae-a091004f25d7.gif',
-            'gifs/grok-video-b9796d0d-7bed-4801-9dc2-730ee6a9fdb1.gif',
-            'gifs/grok-video-b495633b-3714-44c6-b8c3-669b543c75fe.gif',
-        ];
-
-        const GIF_AD_TEXTS = [
-            { t: 'GORĄCE SINGIELKI w koszarach!', s: '3 km od Twojej jednostki wojskowej!', c: 'POZNAJ JE 🔥' },
-            { t: 'ZAROB 50000zł DZIENNIE!', s: 'Wystarczy rzucić studia na WAT!', c: 'DOWIEDZ SIĘ 💰' },
-            { t: 'WYKRYTO 21377 WIRUSÓW!', s: 'Twój laptop WEL jest zagrożony!', c: 'SKANUJ TERAZ ⚠️' },
-            { t: 'Profesorowie NIENAWIDZĄ tego triku!', s: 'Zdaj egzamin bez nauki w 3h!', c: 'SPRAWDŹ 🧠' },
-            { t: 'Samsung S26 za 1zł!', s: 'Zostały 2 sztuki! Oferta wygasa za 0:03:22', c: 'KUP TERAZ Z KODEM SEX69 📱' },
-            { t: 'NOWY PLAN bez PONIEDZIAŁKÓW!', s: 'Rektor potwierdził! Kliknij aby aktywować!', c: 'AKTYWUJ ✅' },
-            { t: 'Dziekanat OTWARTY 24/7!', s: 'Nowa reforma — dziekanat non-stop!', c: 'SZCZEGÓŁY 🏛️' },
-            { t: 'DARMOWE OBIADY na stołówce!', s: 'Wystarczy podać ten tajny kod...', c: 'POKAŻ KOD 🍔' },
-            { t: 'STYPENDIUM 10000zł/msc!', s: 'Dla KAŻDEGO studenta WAT bez średniej!', c: 'APLIKUJ 🎓' },
-            { t: 'Generał zaprasza na GRILLA!', s: 'Spotkanie integracyjne w klubie WAT!', c: 'ZAPISZ SIĘ 🥩' },
-            { t: 'DARMOWY SEMESTR dla WEL!', s: 'Dziekan ogłosił amnestię od opłat!', c: 'ODBIERZ 💸' },
-            { t: 'UWAGA: Sesja ODWOŁANA!', s: 'Wszystkie egzaminy przesunięte o rok!', c: 'CZYTAJ WIĘCEJ 📰' },
-            { t: 'AKADEMIK z KLIMATYZACJĄ!', s: 'Nowe pokoje 1-osobowe od przyszłego semestru!', c: 'REZERWUJ 🏠' },
-            { t: 'PĄCZKI w bufecie — PROMOCJA!', s: 'Kup 1, dostaniesz 47 GRATIS!', c: 'JEDZ 🍩' },
-            { t: 'Twój WYKŁADOWCA Cię szuka!', s: 'Masz niezaliczone kolokwium z 2019...', c: 'UKRYJ SIĘ 🫣' },
-            { t: 'GORĄCA GOTH z WEL szuka CIEBIE!', s: 'Czarne paznokcie, kolczyk w języku...', c: 'NAPISZ DO NIEJ 🖤' },
-            { t: 'BLIK ZA NOTATKI!', s: 'Najlepsze notatki z analizy za 2zł!', c: 'KUPUJĘ 📝' },
-            { t: 'ALARM: Twoja SESJA w ZAGROŻENIU!', s: 'Wykryto 0 godzin nauki w tym tygodniu!', c: 'RATUJ SIĘ 🚨' },
-            { t: 'KEBAB GRATIS po 22:00!', s: 'Pokaż legitymację WAT w dowolnym kebabie!', c: 'SPRAWDŹ GDZIE 🌯' },
-            { t: 'MUNDUR PREMIUM za 50% CENY!', s: 'Outlet wojskowy — ostatnie sztuki!', c: 'KUP MUNDUR 🎖️' },
-            { t: 'CHAT GPT zdał za CIEBIE!', s: 'AI pisze sprawozdania — promotor nie wie!', c: 'POBIERZ BOT 🤖' },
-            { t: 'KURS PRZETRWANIA: Sesja WAT!', s: 'Naucz się spać 2h i zdawać wszystko!', c: 'ZAPISZ SIĘ 💀' },
-            { t: 'OBIADY dla STUDENTÓW za 1zł!', s: 'Tajny trick: pokaż plan zajęć z WAT!', c: 'SPRAWDŹ 🥘' },
-            { t: 'WIFI w akademiku: NAPRAWIONE?', s: 'Nie. Ale mamy router za 15zł!', c: 'KUP ROUTER 📡' },
-            { t: 'UWAGA: Twój DZIEKAN Cię szuka!', s: 'Masz 3 niezaliczone z 2022. Biegnij.', c: 'UCIEKAJ 🏃' },
-            { t: 'GTA 6 na LAPTOPIE z WAT!', s: 'Wystarczy wyłączyć Windowsa Defender!', c: 'POBIERZ CRACK 🎮' },
-            { t: 'KAWA DARMOWA w bibliotece!', s: 'Tylko dla tych co wracają przed 6 rano!', c: 'WEJDŹ 📚' },
-            { t: 'SINGIELKI z DZIEKANATU czekają!', s: 'Złóż podanie i może cię zauważą...', c: 'ZŁÓŻ PODANIE 💘' },
-            { t: 'PROMOCJA: Notatki z Analizy!', s: 'Zrozumiałe, poprawne, tylko 3zł!', c: 'KUPUJĘ 📐' },
-            { t: 'WOJSKO DA CI STYPENDIUM!', s: 'Tylko 6 lat służby po skończeniu... 🙂', c: 'APLIKUJ 🪖' },
-            { t: 'ESCAPE ROOM: Budynek 100!', s: 'Znajdź wyjście z labiryntu korytarzy!', c: 'GRAM 🗺️' },
-            { t: 'NOCNA ZMIANA na stołówce!', s: 'Kelnerki czekają! (to nieprawda)', c: 'IDŹ SPAĆ 😴' },
-        ];
-
-        // === MAMUŚKI GEO AD SYSTEM ===
-        const MAMUSKI_ADDRESSES = [
-            'ul. Gen. Sylwestra Kaliskiego 2', 'ul. Kartezjusza 1', 'ul. Radiowa 25',
-            'ul. Fieldorfa 10', 'ul. Ostroroga 35A', 'ul. Księcia Bolesława 6',
-            'ul. Bemowska 8', 'ul. Lazurowa 14', 'ul. Górczewska 124',
-            'ul. Kaliskiego 25B', 'ul. Radiowa 3', 'ul. Powstańców Śląskich 95',
-            'ul. Obozowa 57', 'akademik WAT nr 3, pokój 214', 'akademik WAT nr 4, pralnia',
-            'bud. 100, sala 135', 'parking przy bud. 57', 'stołówka WAT, stolik nr 7',
-            'siłownia WAT, szatnia męska', 'biblioteka WAT, czytelnia cicha',
-        ];
-        const MAMUSKI_NAMES = [
-            'Grażyna (47)', 'Bożena (52)', 'Halina (44)', 'Danuta (49)', 'Krystyna (55)',
-            'Elżbieta (43)', 'Jolanta (51)', 'Małgorzata (46)', 'Teresa (53)', 'Wiesława (48)',
-            'Ewa (42)', 'Agnieszka (45)', 'Zofia (58)', 'Barbara (50)', 'Irena (54)',
-        ];
-
-        function spawnMamuskiAd() {
-            const container = document.getElementById('gifAdContainer');
-            if (!container) return;
-            const loader = document.getElementById('loader');
-            if (loader && loader.style.display === 'none') return;
-
-            const name = MAMUSKI_NAMES[Math.floor(Math.random() * MAMUSKI_NAMES.length)];
-            const addr = MAMUSKI_ADDRESSES[Math.floor(Math.random() * MAMUSKI_ADDRESSES.length)];
-            let dist = (1.5 + Math.random() * 3.5); // start 1.5-5km away
-            const gif = GIF_FILES[Math.floor(Math.random() * GIF_FILES.length)];
-
-            const el = document.createElement('div');
-            el.className = 'gif-ad mamuski-ad';
-            el.style.borderColor = '#ff1493';
-            el.style.boxShadow = '0 0 40px rgba(255,20,147,.5), 0 4px 20px rgba(0,0,0,.5)';
-
-            const vw = window.innerWidth, vh = window.innerHeight;
-            const isMobile = window.innerWidth <= 750;
-            if (isMobile) {
-                el.style.bottom = '10px';
-                el.style.left = '10px';
-                el.style.top = 'auto';
-            } else {
-                el.style.left = (20 + Math.random() * Math.max(10, vw - 300)) + 'px';
-                el.style.top = (20 + Math.random() * Math.max(10, vh - 400)) + 'px';
-            }
-            el.style.animationDelay = '0s, ' + (Math.random() * 2).toFixed(1) + 's';
-
-            const distId = 'mamuski_dist_' + Date.now();
-            el.innerHTML = `
-                <span class="gif-ad-tag">REKLAMA 18+</span>
-                <span class="gif-ad-close">✕</span>
-                <img src="${gif}" alt="ad" loading="lazy">
-                <div class="gif-ad-text" style="color:#ff69b4">
-                    🔥 ${name} biegnie do CIEBIE! 🔥
-                    <div class="gif-ad-sub" style="color:#ff1493">
-                        📍 ${addr}<br>
-                        📏 Dystans: <strong id="${distId}">${dist.toFixed(2)} km</strong><br>
-                        ⚡ ZBLIŻA SIĘ!
-                    </div>
-                </div>
-                <div class="gif-ad-cta" style="background:linear-gradient(90deg,#ff1493,#ff69b4)">OTWÓRZ CZAT 💋</div>
-            `;
-
-            // Live distance countdown
-            const distEl = () => document.getElementById(distId);
-            const distTimer = setInterval(() => {
-                dist -= (0.01 + Math.random() * 0.04);
-                if (dist < 0.01) dist = 0.001 + Math.random() * 0.005;
-                const d = distEl();
-                if (d) {
-                    d.textContent = dist < 0.05 ? (dist * 1000).toFixed(0) + ' m' : dist.toFixed(2) + ' km';
-                    if (dist < 0.1) d.style.color = '#ff0';
-                    if (dist < 0.03) d.textContent = '🚪 ZA DRZWIAMI!';
-                } else {
-                    clearInterval(distTimer);
-                }
-            }, 300 + Math.random() * 200);
-
-            // Evasive close — dodges a few times on both desktop & mobile, then actually closes
-            const closeBtn = el.querySelector('.gif-ad-close');
-            let evades = 0;
-            const maxEvades = 3 + Math.floor(Math.random() * 2); // 3-4 evades before it works
-
-            function evadeClose() {
-                const rect = el.getBoundingClientRect();
-                const maxTop = Math.max(5, rect.height - 40);
-                const maxRight = Math.max(5, rect.width - 40);
-                closeBtn.style.top = (5 + Math.random() * Math.min(30, maxTop)) + 'px';
-                closeBtn.style.right = (5 + Math.random() * Math.min(40, maxRight)) + 'px';
-                evades++;
-            }
-
-            function actuallyClose() {
-                clearInterval(distTimer);
-                el.style.animation = 'none'; el.style.transform = 'scale(0)'; el.style.opacity = '0';
-                el.style.transition = 'all .2s';
-                setTimeout(() => el.remove(), 250);
-            }
-
-            function handleCloseAttempt(e) {
-                e.stopPropagation();
-                if (e.cancelable) e.preventDefault();
-                if (evades < maxEvades) { evadeClose(); return; }
-                actuallyClose();
-            }
-
-            // Desktop: evade on hover
-            closeBtn.addEventListener('mouseenter', () => {
-                if (evades < maxEvades && Math.random() < 0.8) evadeClose();
-            });
-
-            closeBtn.addEventListener('click', handleCloseAttempt);
-            closeBtn.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
-            closeBtn.addEventListener('touchend', (e) => { e.stopPropagation(); if (e.cancelable) e.preventDefault(); handleCloseAttempt(e); }, { passive: false });
-
-            // CTA spawns another mamuśki ad
-            const ctaBtn = el.querySelector('.gif-ad-cta');
-            ctaBtn.addEventListener('click', () => spawnMamuskiAd());
-            ctaBtn.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
-            ctaBtn.addEventListener('touchend', (e) => { e.stopPropagation(); if (e.cancelable) e.preventDefault(); spawnMamuskiAd(); }, { passive: false });
-
-            // Draggable
-            let isDragging = false, dragOffX = 0, dragOffY = 0;
-            el.addEventListener('mousedown', (e) => {
-                if (e.target.closest('.gif-ad-close') || e.target.closest('.gif-ad-cta')) return;
-                isDragging = true; el.classList.add('dragging');
-                dragOffX = e.clientX - el.offsetLeft; dragOffY = e.clientY - el.offsetTop;
-                e.preventDefault();
-            });
-            document.addEventListener('mousemove', (e) => { if (!isDragging) return; el.style.left = (e.clientX - dragOffX) + 'px'; el.style.top = (e.clientY - dragOffY) + 'px'; });
-            document.addEventListener('mouseup', () => { if (isDragging) { isDragging = false; el.classList.remove('dragging'); } });
-
-            // Touch drag support for mobile
-            el.addEventListener('touchstart', (e) => {
-                if (e.target.closest('.gif-ad-close') || e.target.closest('.gif-ad-cta')) return;
-                isDragging = true; el.classList.add('dragging');
-                const t = e.touches[0];
-                dragOffX = t.clientX - el.offsetLeft; dragOffY = t.clientY - el.offsetTop;
-            }, { passive: true });
-            document.addEventListener('touchmove', (e) => { if (!isDragging) return; const t = e.touches[0]; el.style.left = (t.clientX - dragOffX) + 'px'; el.style.top = (t.clientY - dragOffY) + 'px'; }, { passive: true });
-            document.addEventListener('touchend', () => { if (isDragging) { isDragging = false; el.classList.remove('dragging'); } });
-
-            container.appendChild(el);
-
-            // Auto-remove after 20-30s
-            setTimeout(() => {
-                clearInterval(distTimer);
-                if (el.parentElement) {
-                    el.style.transition = 'all .3s'; el.style.transform = 'scale(0) rotate(20deg)'; el.style.opacity = '0';
-                    setTimeout(() => el.remove(), 350);
-                }
-            }, 20000 + Math.random() * 10000);
-        }
-
-        let gifAdTimer = null;
-        let gifAdCount = 0;
-        const MAX_GIF_ADS = 5;
-
-        function spawnGifAd() {
-            const container = document.getElementById('gifAdContainer');
-            if (!container) return;
-            const loader = document.getElementById('loader');
-            if (loader && loader.style.display === 'none') {
-                stopGifAds();
-                return;
-            }
-            const isMobile = window.innerWidth <= 750;
-            const maxAds = isMobile ? 2 : MAX_GIF_ADS;
-            if (container.querySelectorAll('.gif-ad').length >= maxAds) return;
-
-            // 25% chance to spawn a mamuśki ad instead
-            if (Math.random() < 0.25) {
-                spawnMamuskiAd();
-                return;
-            }
-
-            const gif = GIF_FILES[Math.floor(Math.random() * GIF_FILES.length)];
-            const text = GIF_AD_TEXTS[Math.floor(Math.random() * GIF_AD_TEXTS.length)];
-
-            const el = document.createElement('div');
-            el.className = 'gif-ad';
-            const vw = window.innerWidth, vh = window.innerHeight;
-            const adW = isMobile ? 180 : 250;
-            if (isMobile) {
-                el.style.bottom = '10px';
-                el.style.left = (10 + Math.random() * Math.max(10, vw - adW - 20)) + 'px';
-                el.style.top = 'auto';
-            } else {
-                const zones = [];
-                const centerX = vw / 2, centerY = vh / 2;
-                const safeMargin = 280;
-                if (centerX - safeMargin > adW + 20) zones.push({ x: [10, centerX - safeMargin - adW], y: [60, vh - 400] });
-                if (vw - centerX - safeMargin > adW + 20) zones.push({ x: [centerX + safeMargin, vw - adW - 10], y: [60, vh - 400] });
-                zones.push({ x: [10, vw - adW - 10], y: [10, Math.max(20, centerY - 300)] });
-                zones.push({ x: [10, vw - adW - 10], y: [Math.min(vh - 350, centerY + 200), vh - 350] });
-                const zone = zones[Math.floor(Math.random() * zones.length)];
-                const x = zone.x[0] + Math.random() * Math.max(0, zone.x[1] - zone.x[0]);
-                const y = zone.y[0] + Math.random() * Math.max(0, zone.y[1] - zone.y[0]);
-                el.style.left = Math.max(5, x) + 'px';
-                el.style.top = Math.max(5, y) + 'px';
-            }
-            el.style.animationDelay = '0s, ' + (Math.random() * 2).toFixed(1) + 's';
-
-            el.innerHTML = `
-                <span class="gif-ad-tag">REKLAMA</span>
-                <span class="gif-ad-close">✕</span>
-                <img src="${gif}" alt="ad" loading="lazy">
-                <div class="gif-ad-text">${text.t}<div class="gif-ad-sub">${text.s}</div></div>
-                <div class="gif-ad-cta">${text.c}</div>
-            `;
-
-            // Evasive close — dodges a few times on both desktop & mobile, then actually closes
-            const closeBtn = el.querySelector('.gif-ad-close');
-            let evades = 0;
-            const maxEvades = 2 + Math.floor(Math.random() * 2); // 2-3 evades before it works
-
-            function evadeClose() {
-                const rect = el.getBoundingClientRect();
-                const maxTop = Math.max(5, rect.height - 40);
-                const maxRight = Math.max(5, rect.width - 40);
-                closeBtn.style.top = (5 + Math.random() * Math.min(30, maxTop)) + 'px';
-                closeBtn.style.right = (5 + Math.random() * Math.min(40, maxRight)) + 'px';
-                evades++;
-            }
-
-            function actuallyClose() {
-                el.style.animation = 'none'; el.style.transform = 'scale(0)'; el.style.opacity = '0';
-                el.style.transition = 'all .2s';
-                setTimeout(() => el.remove(), 250);
-            }
-
-            function handleCloseAttempt(e) {
-                e.stopPropagation();
-                if (e.cancelable) e.preventDefault();
-                if (evades < maxEvades) { evadeClose(); return; }
-                actuallyClose();
-            }
-
-            // Desktop: evade on hover
-            closeBtn.addEventListener('mouseenter', () => {
-                if (evades < maxEvades && Math.random() < 0.7) evadeClose();
-            });
-
-            closeBtn.addEventListener('click', handleCloseAttempt);
-            closeBtn.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
-            closeBtn.addEventListener('touchend', (e) => { e.stopPropagation(); if (e.cancelable) e.preventDefault(); handleCloseAttempt(e); }, { passive: false });
-
-            // CTA spawns another ad
-            const ctaBtn = el.querySelector('.gif-ad-cta');
-            ctaBtn.addEventListener('click', () => spawnGifAd());
-            ctaBtn.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: false });
-            ctaBtn.addEventListener('touchend', (e) => { e.stopPropagation(); if (e.cancelable) e.preventDefault(); spawnGifAd(); }, { passive: false });
-
-            // Make draggable (mouse)
-            let isDragging = false, dragOffX = 0, dragOffY = 0;
-            el.addEventListener('mousedown', (e) => {
-                if (e.target.closest('.gif-ad-close') || e.target.closest('.gif-ad-cta')) return;
-                isDragging = true; el.classList.add('dragging');
-                dragOffX = e.clientX - el.offsetLeft; dragOffY = e.clientY - el.offsetTop;
-                e.preventDefault();
-            });
-            document.addEventListener('mousemove', (e) => { if (!isDragging) return; el.style.left = (e.clientX - dragOffX) + 'px'; el.style.top = (e.clientY - dragOffY) + 'px'; });
-            document.addEventListener('mouseup', () => { if (isDragging) { isDragging = false; el.classList.remove('dragging'); } });
-
-            // Touch drag for mobile
-            el.addEventListener('touchstart', (e) => {
-                if (e.target.closest('.gif-ad-close') || e.target.closest('.gif-ad-cta')) return;
-                isDragging = true; el.classList.add('dragging');
-                const t = e.touches[0]; dragOffX = t.clientX - el.offsetLeft; dragOffY = t.clientY - el.offsetTop;
-            }, { passive: true });
-            document.addEventListener('touchmove', (e) => { if (!isDragging) return; const t = e.touches[0]; el.style.left = (t.clientX - dragOffX) + 'px'; el.style.top = (t.clientY - dragOffY) + 'px'; }, { passive: true });
-            document.addEventListener('touchend', () => { if (isDragging) { isDragging = false; el.classList.remove('dragging'); } });
-
-            container.appendChild(el);
-            gifAdCount++;
-
-            // Auto-remove after 12-20s
-            setTimeout(() => {
-                if (el.parentElement) {
-                    el.style.transition = 'all .3s'; el.style.transform = 'scale(0) rotate(20deg)'; el.style.opacity = '0';
-                    setTimeout(() => el.remove(), 350);
-                }
-            }, 12000 + Math.random() * 8000);
-        }
-
-        function startGifAds() {
-            setTimeout(spawnGifAd, 800);
-            setTimeout(spawnGifAd, 2000);
-            gifAdTimer = setInterval(spawnGifAd, 3000);
-        }
-
-        function stopGifAds() {
-            if (gifAdTimer) { clearInterval(gifAdTimer); gifAdTimer = null; }
-            const container = document.getElementById('gifAdContainer');
-            if (container) container.innerHTML = '';
-        }
-
-        // Start gif ads when on loader page
-        if (document.getElementById('loader') && document.getElementById('loader').style.display !== 'none') {
-            startGifAds();
-        }
-
-        // Stop gif ads when plan loads (patch the init function)
-        const _origInit = init;
-        init = function (d) {
-            stopGifAds();
-            _origInit(d);
-        };
     </script>
 </body>
 
