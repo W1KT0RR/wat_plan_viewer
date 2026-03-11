@@ -1076,36 +1076,93 @@
         }
 
         /* === FUN ADS (in-schedule) === */
-        .fun-ad-card {
+        /* === INLINE GIF AD (between lessons) === */
+        .inline-gif-ad {
             border-radius: 7px;
-            padding: .35rem .5rem;
-            background: rgba(99, 102, 241, .06);
-            border: 1px dashed var(--border);
-            font-size: .6rem;
-            color: var(--text-dim);
-            line-height: 1.35;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: var(--card2);
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            gap: 0;
+            cursor: pointer;
+            transition: border-color .15s, transform .1s;
+            position: relative;
         }
 
-        .fun-ad-card .fad-title {
+        .inline-gif-ad:hover {
+            border-color: var(--accent);
+            transform: scale(1.01);
+        }
+
+        .inline-gif-ad img {
+            width: 68px;
+            min-width: 68px;
+            object-fit: cover;
+            display: block;
+            flex-shrink: 0;
+        }
+
+        .inline-gif-ad .iga-body {
+            padding: .35rem .45rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: .1rem;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .inline-gif-ad .iga-tag {
+            font-size: .42rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .inline-gif-ad .iga-title {
+            font-size: .63rem;
             font-weight: 700;
-            color: var(--accent-light);
-            font-size: .6rem;
+            color: var(--text);
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .fun-ad-card .fad-body {
+        .inline-gif-ad .iga-sub {
+            font-size: .55rem;
             color: var(--text-muted);
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .fun-ad-card .fad-sub {
-            font-size: .5rem;
-            color: var(--text-dim);
-            font-style: italic;
+        .inline-gif-ad .iga-cta {
+            margin-top: .2rem;
+            font-size: .52rem;
+            font-weight: 700;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: .15rem .35rem;
+            cursor: pointer;
+            align-self: flex-start;
+            font-family: inherit;
+            white-space: nowrap;
         }
 
-        .fun-ad-card .fad-tag {
-            font-size: .45rem;
-            color: var(--text-dim);
-            float: right;
+        .inline-gif-ad .iga-cta:hover {
+            background: var(--accent-light);
+        }
+
+        @media(max-width:750px) {
+            .inline-gif-ad img { width: 56px; min-width: 56px; }
+            .inline-gif-ad .iga-title { font-size: .6rem; }
+            .inline-gif-ad .iga-sub { font-size: .5rem; }
         }
 
         .ads-toggle {
@@ -1131,16 +1188,6 @@
             background: rgba(245, 158, 11, .08);
         }
 
-        @media(max-width:750px) {
-            .fun-ad-card {
-                font-size: .55rem;
-                padding: .3rem .4rem;
-            }
-
-            .fun-ad-card .fad-title {
-                font-size: .55rem;
-            }
-        }
 
         /* === PAYWALL MODAL === */
         .paywall-overlay {
@@ -2003,10 +2050,21 @@
             return { t: ad.t, b: body, s: ad.s };
         }
 
-        function funAdHtml() {
-            const ad = getFunAd();
-            return '<div class="fun-ad-card"><span class="fad-tag">reklama</span><div class="fad-title">' + ad.t + '</div><div class="fad-body">' + ad.b + '</div><div class="fad-sub">' + ad.s + '</div></div>';
+        function inlineGifAdHtml() {
+            const gif = GIF_FILES[Math.floor(Math.random() * GIF_FILES.length)];
+            const text = GIF_AD_TEXTS[Math.floor(Math.random() * GIF_AD_TEXTS.length)];
+            return `<div class="inline-gif-ad" onclick="void(0)">` +
+                `<img src="${gif}" alt="ad" loading="lazy">` +
+                `<div class="iga-body">` +
+                `<div class="iga-tag">reklama</div>` +
+                `<div class="iga-title">${text.t}</div>` +
+                `<div class="iga-sub">${text.s}</div>` +
+                `<button class="iga-cta">${text.c}</button>` +
+                `</div></div>`;
         }
+
+        // Keep funAdHtml as alias for back-compat
+        function funAdHtml() { return inlineGifAdHtml(); }
 
         function getTypeName(t) {
             const map = { 'w': 'Wyklad', 'W': 'Wyklad', 'L': 'Lab', 'S': 'Seminarium', 'P': 'Projekt', 'E': 'Egzamin', 'Ep': 'Egz.popr.', 'Z': 'Zaliczenie', 'Zp': 'Zal.popr.' };
