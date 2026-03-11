@@ -919,87 +919,525 @@
                 font-size: .65rem;
             }
         }
+
         /* === BACK BUTTON === */
-        .back-btn { background:none; border:1px solid var(--border); color:var(--text-muted); padding:.2rem .5rem; border-radius:6px; cursor:pointer; font-size:.75rem; transition:all .15s; font-family:inherit; white-space:nowrap; }
-        .back-btn:hover { border-color:var(--accent); color:var(--accent-light); }
+        .back-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: .2rem .5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: .75rem;
+            transition: all .15s;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        .back-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent-light);
+        }
 
         /* === AUTOCOMPLETE === */
-        .ac-wrapper { position:relative; flex:1; }
-        .ac-dropdown { position:absolute; top:100%; left:0; right:0; background:var(--card); border:1px solid var(--border); border-top:none; border-radius:0 0 8px 8px; max-height:350px; overflow-y:auto; z-index:400; display:none; }
-        .ac-dropdown.open { display:block; }
-        .ac-item { padding:.4rem .7rem; font-size:.8rem; cursor:pointer; border-bottom:1px solid rgba(45,51,72,.4); display:flex; justify-content:space-between; align-items:center; }
-        .ac-item:hover, .ac-item.active { background:var(--card2); color:var(--accent-light); }
-        .ac-item .ac-type { font-size:.55rem; color:var(--text-dim); padding:1px 4px; background:var(--bg); border-radius:3px; }
-        .ac-loading { padding:.5rem; text-align:center; font-size:.75rem; color:var(--text-muted); }
+        .ac-wrapper {
+            position: relative;
+            flex: 1;
+        }
+
+        .ac-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            max-height: 350px;
+            overflow-y: auto;
+            z-index: 400;
+            display: none;
+        }
+
+        .ac-dropdown.open {
+            display: block;
+        }
+
+        .ac-item {
+            padding: .4rem .7rem;
+            font-size: .8rem;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(45, 51, 72, .4);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ac-item:hover,
+        .ac-item.active {
+            background: var(--card2);
+            color: var(--accent-light);
+        }
+
+        .ac-item .ac-type {
+            font-size: .55rem;
+            color: var(--text-dim);
+            padding: 1px 4px;
+            background: var(--bg);
+            border-radius: 3px;
+        }
+
+        .ac-loading {
+            padding: .5rem;
+            text-align: center;
+            font-size: .75rem;
+            color: var(--text-muted);
+        }
 
         /* === TYPE TOGGLE === */
-        .type-toggle { display:flex; gap:2px; background:var(--bg); border-radius:8px; padding:2px; margin-bottom:.5rem; }
-        .type-toggle button { flex:1; padding:.3rem .5rem; background:none; border:none; border-radius:6px; color:var(--text-muted); font-size:.75rem; cursor:pointer; font-family:inherit; transition:all .15s; }
-        .type-toggle button.active { background:var(--accent); color:#fff; }
+        .type-toggle {
+            display: flex;
+            gap: 2px;
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 2px;
+            margin-bottom: .5rem;
+        }
+
+        .type-toggle button {
+            flex: 1;
+            padding: .3rem .5rem;
+            background: none;
+            border: none;
+            border-radius: 6px;
+            color: var(--text-muted);
+            font-size: .75rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all .15s;
+        }
+
+        .type-toggle button.active {
+            background: var(--accent);
+            color: #fff;
+        }
 
         /* === FUN ADS (in-schedule) === */
-        .fun-ad-card { border-radius:7px; padding:.35rem .5rem; background:rgba(99,102,241,.06); border:1px dashed var(--border); font-size:.6rem; color:var(--text-dim); line-height:1.35; }
-        .fun-ad-card .fad-title { font-weight:700; color:var(--accent-light); font-size:.6rem; }
-        .fun-ad-card .fad-body { color:var(--text-muted); }
-        .fun-ad-card .fad-sub { font-size:.5rem; color:var(--text-dim); font-style:italic; }
-        .fun-ad-card .fad-tag { font-size:.45rem; color:var(--text-dim); float:right; }
-        .ads-toggle { background:none; border:1px solid var(--border); color:var(--text-dim); padding:.2rem .45rem; border-radius:6px; cursor:pointer; font-size:.65rem; transition:all .15s; font-family:inherit; white-space:nowrap; }
-        .ads-toggle:hover { border-color:var(--accent); }
-        .ads-toggle.active { border-color:var(--last-border); color:var(--last-border); background:rgba(245,158,11,.08); }
+        .fun-ad-card {
+            border-radius: 7px;
+            padding: .35rem .5rem;
+            background: rgba(99, 102, 241, .06);
+            border: 1px dashed var(--border);
+            font-size: .6rem;
+            color: var(--text-dim);
+            line-height: 1.35;
+        }
+
+        .fun-ad-card .fad-title {
+            font-weight: 700;
+            color: var(--accent-light);
+            font-size: .6rem;
+        }
+
+        .fun-ad-card .fad-body {
+            color: var(--text-muted);
+        }
+
+        .fun-ad-card .fad-sub {
+            font-size: .5rem;
+            color: var(--text-dim);
+            font-style: italic;
+        }
+
+        .fun-ad-card .fad-tag {
+            font-size: .45rem;
+            color: var(--text-dim);
+            float: right;
+        }
+
+        .ads-toggle {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            padding: .2rem .45rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: .65rem;
+            transition: all .15s;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        .ads-toggle:hover {
+            border-color: var(--accent);
+        }
+
+        .ads-toggle.active {
+            border-color: var(--last-border);
+            color: var(--last-border);
+            background: rgba(245, 158, 11, .08);
+        }
+
         @media(max-width:750px) {
-            .fun-ad-card { font-size:.55rem; padding:.3rem .4rem; }
-            .fun-ad-card .fad-title { font-size:.55rem; }
+            .fun-ad-card {
+                font-size: .55rem;
+                padding: .3rem .4rem;
+            }
+
+            .fun-ad-card .fad-title {
+                font-size: .55rem;
+            }
         }
 
         /* === PAYWALL MODAL === */
-        .paywall-overlay { position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:300; display:flex; justify-content:center; align-items:center; padding:1rem; }
-        .paywall-box { background:var(--card); border:1px solid var(--border); border-radius:16px; max-width:440px; width:100%; padding:2rem; text-align:center; position:relative; z-index:2; }
-        .paywall-box h2 { font-size:1.3rem; margin-bottom:.5rem; }
-        .paywall-box .pw-sub { color:var(--text-muted); font-size:.85rem; margin-bottom:1.5rem; }
-        .paywall-box .pw-group { color:var(--accent-light); font-weight:700; }
-        .pw-options { display:flex; flex-direction:column; gap:.6rem; }
-        .pw-btn { padding:.7rem 1rem; border-radius:10px; border:1px solid var(--border); background:var(--bg); color:var(--text); font-size:.85rem; cursor:pointer; transition:all .15s; font-family:inherit; }
-        .pw-btn:hover { border-color:var(--accent); background:var(--card2); }
-        .pw-btn.pw-primary { background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600; }
-        .pw-btn.pw-primary:hover { background:var(--accent-light); }
-        .pw-btn.pw-demo { background:rgba(245,158,11,.15); border-color:var(--last-border); color:var(--last-border); }
-        .pw-code-row { display:flex; gap:.4rem; margin-top:.5rem; }
-        .pw-code-row input { flex:1; padding:.5rem .7rem; background:var(--bg); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:1rem; text-align:center; letter-spacing:.3rem; font-family:monospace; outline:none; }
-        .pw-code-row input:focus { border-color:var(--accent); }
-        .pw-code-err { color:var(--red); font-size:.75rem; margin-top:.3rem; min-height:1rem; }
-        .pw-payment-info { background:var(--bg); border-radius:10px; padding:1rem; margin-top:.5rem; text-align:left; font-size:.8rem; line-height:1.5; }
-        .pw-payment-info .blik-num { font-size:1.4rem; font-weight:700; color:var(--accent-light); letter-spacing:.2rem; text-align:center; display:block; margin:.5rem 0; }
-        .pw-back { color:var(--text-muted); font-size:.75rem; cursor:pointer; margin-top:.8rem; display:inline-block; }
-        .pw-back:hover { color:var(--text); }
+        .paywall-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .85);
+            z-index: 300;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .paywall-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            max-width: 440px;
+            width: 100%;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .paywall-box h2 {
+            font-size: 1.3rem;
+            margin-bottom: .5rem;
+        }
+
+        .paywall-box .pw-sub {
+            color: var(--text-muted);
+            font-size: .85rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .paywall-box .pw-group {
+            color: var(--accent-light);
+            font-weight: 700;
+        }
+
+        .pw-options {
+            display: flex;
+            flex-direction: column;
+            gap: .6rem;
+        }
+
+        .pw-btn {
+            padding: .7rem 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-size: .85rem;
+            cursor: pointer;
+            transition: all .15s;
+            font-family: inherit;
+        }
+
+        .pw-btn:hover {
+            border-color: var(--accent);
+            background: var(--card2);
+        }
+
+        .pw-btn.pw-primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .pw-btn.pw-primary:hover {
+            background: var(--accent-light);
+        }
+
+        .pw-btn.pw-demo {
+            background: rgba(245, 158, 11, .15);
+            border-color: var(--last-border);
+            color: var(--last-border);
+        }
+
+        .pw-code-row {
+            display: flex;
+            gap: .4rem;
+            margin-top: .5rem;
+        }
+
+        .pw-code-row input {
+            flex: 1;
+            padding: .5rem .7rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1rem;
+            text-align: center;
+            letter-spacing: .3rem;
+            font-family: monospace;
+            outline: none;
+        }
+
+        .pw-code-row input:focus {
+            border-color: var(--accent);
+        }
+
+        .pw-code-err {
+            color: var(--red);
+            font-size: .75rem;
+            margin-top: .3rem;
+            min-height: 1rem;
+        }
+
+        .pw-payment-info {
+            background: var(--bg);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: .5rem;
+            text-align: left;
+            font-size: .8rem;
+            line-height: 1.5;
+        }
+
+        .pw-payment-info .blik-num {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-light);
+            letter-spacing: .2rem;
+            text-align: center;
+            display: block;
+            margin: .5rem 0;
+        }
+
+        .pw-back {
+            color: var(--text-muted);
+            font-size: .75rem;
+            cursor: pointer;
+            margin-top: .8rem;
+            display: inline-block;
+        }
+
+        .pw-back:hover {
+            color: var(--text);
+        }
 
         /* === CURSED / DEMO MODE === */
-        body.cursed { font-family:'Comic Sans MS','Papyrus','Chalkduster',cursive !important; cursor:crosshair; }
-        body.cursed * { font-family:inherit !important; }
-        body.cursed header { background:linear-gradient(90deg,#ff00ff,#00ff00,#ffff00,#ff6600,#ff00ff) !important; background-size:400% !important; animation:cursed-rainbow 3s linear infinite !important; }
-        body.cursed .day-header { background:linear-gradient(135deg,#220033,#003322) !important; }
-        body.cursed .class-card { animation:cursed-wobble .4s ease-in-out infinite alternate !important; border:2px dashed #ff00ff !important; }
-        body.cursed .cc-name { animation:cursed-blink .8s step-end infinite !important; }
-        body.cursed .legend-chip { animation:cursed-wobble .3s ease-in-out infinite alternate !important; }
-        body.cursed .nav-btn { border-color:#ff00ff !important; color:#0f0 !important; }
-        body.cursed .week-label { color:#ff0 !important; text-shadow:0 0 10px #ff0; }
-        body.cursed .now-info { background:#f0f !important; color:#000 !important; animation:cursed-blink 1s step-end infinite; }
-        @keyframes cursed-rainbow { 0%{background-position:0% 50%} 100%{background-position:400% 50%} }
-        @keyframes cursed-wobble { from{transform:rotate(-1.5deg) scale(1.01)} to{transform:rotate(1.5deg) scale(.99)} }
-        @keyframes cursed-blink { 50%{opacity:.3} }
-        .demo-watermark { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) rotate(-30deg); font-size:8rem; font-weight:900; color:rgba(255,0,255,.08); pointer-events:none; z-index:50; white-space:nowrap; letter-spacing:1rem; }
-        .demo-banner { position:fixed; bottom:0; left:0; right:0; z-index:250; background:linear-gradient(90deg,#ff00ff,#ff6600,#ffff00,#00ff00); padding:6px; text-align:center; font-weight:900; color:#000; font-size:.8rem; cursor:pointer; animation:cursed-rainbow 2s linear infinite; background-size:400%; }
-        .demo-marquee { position:fixed; top:0; left:0; right:0; z-index:250; background:#000; color:#0f0; font-size:.7rem; overflow:hidden; white-space:nowrap; padding:3px 0; }
-        .demo-marquee span { display:inline-block; animation:marquee-scroll 15s linear infinite; }
-        @keyframes marquee-scroll { from{transform:translateX(100vw)} to{transform:translateX(-100%)} }
+        body.cursed {
+            font-family: 'Comic Sans MS', 'Papyrus', 'Chalkduster', cursive !important;
+            cursor: crosshair;
+        }
 
-        .fake-ad { position:fixed; z-index:260; background:linear-gradient(135deg,#1a0030,#300010); border:2px solid #f0f; border-radius:12px; padding:1rem 2.5rem 1rem 1rem; max-width:320px; box-shadow:0 0 30px rgba(255,0,255,.3); animation:ad-appear .3s ease-out; cursor:default; }
-        .fake-ad .ad-title { font-size:.85rem; font-weight:700; color:#ff0; margin-bottom:.3rem; }
-        .fake-ad .ad-body { font-size:.7rem; color:#f0f; }
-        .fake-ad .ad-cta { display:inline-block; margin-top:.4rem; padding:.25rem .8rem; background:#f0f; color:#000; border-radius:6px; font-size:.65rem; font-weight:700; cursor:pointer; }
-        .fake-ad .ad-close { position:absolute; top:4px; right:8px; color:#666; font-size:1rem; cursor:pointer; transition:all .05s; }
-        .fake-ad .ad-close:hover { color:#f0f; }
-        .fake-ad .ad-label { position:absolute; top:4px; left:8px; font-size:.5rem; color:#444; }
-        @keyframes ad-appear { from{transform:scale(.5);opacity:0} to{transform:scale(1);opacity:1} }
+        body.cursed * {
+            font-family: inherit !important;
+        }
+
+        body.cursed header {
+            background: linear-gradient(90deg, #ff00ff, #00ff00, #ffff00, #ff6600, #ff00ff) !important;
+            background-size: 400% !important;
+            animation: cursed-rainbow 3s linear infinite !important;
+        }
+
+        body.cursed .day-header {
+            background: linear-gradient(135deg, #220033, #003322) !important;
+        }
+
+        body.cursed .class-card {
+            animation: cursed-wobble .4s ease-in-out infinite alternate !important;
+            border: 2px dashed #ff00ff !important;
+        }
+
+        body.cursed .cc-name {
+            animation: cursed-blink .8s step-end infinite !important;
+        }
+
+        body.cursed .legend-chip {
+            animation: cursed-wobble .3s ease-in-out infinite alternate !important;
+        }
+
+        body.cursed .nav-btn {
+            border-color: #ff00ff !important;
+            color: #0f0 !important;
+        }
+
+        body.cursed .week-label {
+            color: #ff0 !important;
+            text-shadow: 0 0 10px #ff0;
+        }
+
+        body.cursed .now-info {
+            background: #f0f !important;
+            color: #000 !important;
+            animation: cursed-blink 1s step-end infinite;
+        }
+
+        @keyframes cursed-rainbow {
+            0% {
+                background-position: 0% 50%
+            }
+
+            100% {
+                background-position: 400% 50%
+            }
+        }
+
+        @keyframes cursed-wobble {
+            from {
+                transform: rotate(-1.5deg) scale(1.01)
+            }
+
+            to {
+                transform: rotate(1.5deg) scale(.99)
+            }
+        }
+
+        @keyframes cursed-blink {
+            50% {
+                opacity: .3
+            }
+        }
+
+        .demo-watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 8rem;
+            font-weight: 900;
+            color: rgba(255, 0, 255, .08);
+            pointer-events: none;
+            z-index: 50;
+            white-space: nowrap;
+            letter-spacing: 1rem;
+        }
+
+        .demo-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 250;
+            background: linear-gradient(90deg, #ff00ff, #ff6600, #ffff00, #00ff00);
+            padding: 6px;
+            text-align: center;
+            font-weight: 900;
+            color: #000;
+            font-size: .8rem;
+            cursor: pointer;
+            animation: cursed-rainbow 2s linear infinite;
+            background-size: 400%;
+        }
+
+        .demo-marquee {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 250;
+            background: #000;
+            color: #0f0;
+            font-size: .7rem;
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 3px 0;
+        }
+
+        .demo-marquee span {
+            display: inline-block;
+            animation: marquee-scroll 15s linear infinite;
+        }
+
+        @keyframes marquee-scroll {
+            from {
+                transform: translateX(100vw)
+            }
+
+            to {
+                transform: translateX(-100%)
+            }
+        }
+
+        .fake-ad {
+            position: fixed;
+            z-index: 260;
+            background: linear-gradient(135deg, #1a0030, #300010);
+            border: 2px solid #f0f;
+            border-radius: 12px;
+            padding: 1rem 2.5rem 1rem 1rem;
+            max-width: 320px;
+            box-shadow: 0 0 30px rgba(255, 0, 255, .3);
+            animation: ad-appear .3s ease-out;
+            cursor: default;
+        }
+
+        .fake-ad .ad-title {
+            font-size: .85rem;
+            font-weight: 700;
+            color: #ff0;
+            margin-bottom: .3rem;
+        }
+
+        .fake-ad .ad-body {
+            font-size: .7rem;
+            color: #f0f;
+        }
+
+        .fake-ad .ad-cta {
+            display: inline-block;
+            margin-top: .4rem;
+            padding: .25rem .8rem;
+            background: #f0f;
+            color: #000;
+            border-radius: 6px;
+            font-size: .65rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .fake-ad .ad-close {
+            position: absolute;
+            top: 4px;
+            right: 8px;
+            color: #666;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all .05s;
+        }
+
+        .fake-ad .ad-close:hover {
+            color: #f0f;
+        }
+
+        .fake-ad .ad-label {
+            position: absolute;
+            top: 4px;
+            left: 8px;
+            font-size: .5rem;
+            color: #444;
+        }
+
+        @keyframes ad-appear {
+            from {
+                transform: scale(.5);
+                opacity: 0
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1
+            }
+        }
     </style>
 </head>
 
@@ -1016,7 +1454,8 @@
             </div>
             <div class="form-row">
                 <div class="ac-wrapper">
-                    <input type="text" id="groupInput" placeholder="Nazwa grupy, np. WEL24EQ3S1" spellcheck="false" autocomplete="off">
+                    <input type="text" id="groupInput" placeholder="Nazwa grupy, np. WEL24EQ3S1" spellcheck="false"
+                        autocomplete="off">
                     <div class="ac-dropdown" id="acDropdown"></div>
                 </div>
                 <select id="semesterSelect">
@@ -1083,7 +1522,9 @@
                     <p>Wyslij <strong>5 PLN</strong> BLIK na numer:</p>
                     <span class="blik-num">XXX-XXX-XXX</span>
                     <p>W tytule wpisz nazwe grupy.<br>Po zaksiegowaniu otrzymasz kod dostepu.</p>
-                    <p style="margin-top:.5rem;color:var(--text-dim);font-size:.7rem">Lub uzyj <a href="https://buy.stripe.com/test_placeholder" target="_blank" style="color:var(--accent-light)">platnosci online (Stripe)</a></p>
+                    <p style="margin-top:.5rem;color:var(--text-dim);font-size:.7rem">Lub uzyj <a
+                            href="https://buy.stripe.com/test_placeholder" target="_blank"
+                            style="color:var(--accent-light)">platnosci online (Stripe)</a></p>
                 </div>
                 <div class="pw-back" onclick="pwShowMain()">&larr; Wstecz</div>
             </div>
@@ -1092,7 +1533,8 @@
                 <p class="pw-sub">Wpisz 5-cyfrowy kod:</p>
                 <div class="pw-code-row">
                     <input type="text" id="pwCodeInput" maxlength="5" placeholder="_ _ _ _ _" autocomplete="off">
-                    <button class="pw-btn pw-primary" onclick="pwVerifyCode()" style="flex:0 0 auto;padding:.5rem 1.2rem">OK</button>
+                    <button class="pw-btn pw-primary" onclick="pwVerifyCode()"
+                        style="flex:0 0 auto;padding:.5rem 1.2rem">OK</button>
                 </div>
                 <div class="pw-code-err" id="pwCodeErr"></div>
                 <div class="pw-back" onclick="pwShowMain()">&larr; Wstecz</div>
@@ -1100,8 +1542,11 @@
         </div>
     </div>
     <div class="demo-watermark" id="demoWatermark" style="display:none">DEMO</div>
-    <div class="demo-marquee" id="demoMarquee" style="display:none"><span>&#9888; TRYB DEMO &#9888; Pelna wersja dostepna po odblokowaniu &#9888; TRYB DEMO &#9888; Kup dostep aby zobaczyc caly plan &#9888;</span></div>
-    <div class="demo-banner" id="demoBanner" style="display:none" onclick="document.getElementById('paywallOverlay').style.display='flex';pwShowMain()">&#128274; ODBLOKUJ PELNA WERSJE &#128274;</div>
+    <div class="demo-marquee" id="demoMarquee" style="display:none"><span>&#9888; TRYB DEMO &#9888; Pelna wersja
+            dostepna po odblokowaniu &#9888; TRYB DEMO &#9888; Kup dostep aby zobaczyc caly plan &#9888;</span></div>
+    <div class="demo-banner" id="demoBanner" style="display:none"
+        onclick="document.getElementById('paywallOverlay').style.display='flex';pwShowMain()">&#128274; ODBLOKUJ PELNA
+        WERSJE &#128274;</div>
 
     <script>
         // ============================================================
@@ -1203,7 +1648,7 @@
                 const unlocked = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
                 unlocked[group.toUpperCase()] = Date.now();
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(unlocked));
-            } catch {}
+            } catch { }
         }
         async function verifyCode(code) {
             const d = new TextEncoder().encode(UNLOCK_SALT + code);
@@ -1293,25 +1738,26 @@
         // ============================================================
         let showFunAds = false;
         const FUN_ADS_POOL = [
-            { t: 'Spotted WAT', b: 'Kto zostawi\u0142 mundur w pralce nr 3 akademik 4? Trzeci tydzie\u0144 tam wisi. Pachnie ju\u017c jak osobny organizm', s: '#pralniaAk4' },
-            { t: 'Spotted WAT', b: 'Do tego co kradnie mi jogurty z lod\u00f3wki na 2. pi\u0119trze \u2014 wiem kim jeste\u015b. Nast\u0119pnym razem jogurt b\u0119dzie z wasabi', s: '#akademik3 #sprawiedliwo\u015b\u0107' },
-            { t: 'Spotted WAT', b: 'Do podchor\u0105\u017cego co chrapi na 3. pi\u0119trze \u2014 mierzy\u0142em, 73 decybele. Oficjalnie przekraczasz normy ha\u0142asu', s: '#akademik4 #niemo\u017cna\u015bpa\u0107' },
-            { t: 'Spotted WAT', b: 'Kto zgubi\u0142 jedn\u0105 lew\u0105 r\u0119kawiczk\u0119 taktyczn\u0105 przy bud. 100? Le\u017cy tam od listopada. Ma ju\u017c w\u0142asny ekosystem', s: '#zagubione' },
-            { t: 'Spotted WAT', b: 'Do osoby co zamawia kebab o 2 w nocy \u2014 ca\u0142y korytarz pachnie czosnkiem. Nie \u017cebym narzeka\u0142, po prostu nast\u0119pnym razem zam\u00f3w dwa', s: '#nocneZarcie' },
-            { t: 'Spotted WAT', b: 'Ten podchor\u0105\u017cy co biegnie po schodach zawsze po 3 na raz \u2014 widzieli\u015bmy jak si\u0119 wywali\u0142e\u015b. Monitoring nie k\u0142amie', s: '#bud57 #karma' },
-            { t: 'Spotted WAT', b: 'Do dziewczyny co \u015bpiewa pod prysznicem akad. 3 \u2014 masz talent ale o 6 rano to troch\u0119 za wcze\u015bnie na koncert', s: '#poranneWokale' },
-            { t: 'Spotted WAT', b: 'Szukam w\u0142a\u015bciciela suszarki kt\u00f3ra dzia\u0142a jak silnik odrzutowy \u2014 akad. 4. Budzimy si\u0119 co noc my\u015bl\u0105c \u017ce to alarm', s: '#cisza_nocna' },
-            { t: 'Spotted WAT', b: 'Kto\u015b rysuje kotki na tablicy w sali 204 przed ka\u017cdym wyk\u0142adem z elektroniki. Nie przestawaj, to jedyne co mnie motywuje', s: '#s204 #kotki' },
-            { t: 'Spotted WAT', b: 'Do tego co parkuje rower przy wej\u015bciu do bud. 57 \u2014 blokujesz przej\u015bcie. Pozdrawiaj\u0105 wszyscy co si\u0119 o niego potkn\u0119li', s: '#bud57' },
-            { t: 'Spotted WAT', b: 'Ten podchor\u0105\u017cy co ZAWSZE bierze podw\u00f3jn\u0105 porcj\u0119 ziemniak\u00f3w i jednego kotleta \u2014 szanuj system, brachu', s: '#sto\u0142\u00f3wka' },
+            { t: 'Spotted WAT', b: 'Szukam kogoś, kto mnie porządnie wypełni dzisiaj wieczorem. Mundur albo cywil – nie ważne. Chcę czuć cię głęboko.', s: '#pralniaAk4' },
+            { t: 'Spotted WAT', b: 'Do tej małej z WIM, co na zajęciach ciągle wierciła się na krześle… Albo masz hemoroidy, albo jesteś tak samo napalona jak ja. Daj znać.', s: '#akademik3 #sprawiedliwo\u015b\u0107' },
+            { t: 'Spotted WAT', b: 'Do podchorążego, który na basenie miał slipy o rozmiar za małe… Wszystko ci się wylewało. I bardzo ładnie wyglądało. Możesz następnym razem nie zakładać wcale.', s: '#akademik4 #niemo\u017cna\u015bpa\u0107' },
+            { t: 'Spotted WAT', b: 'Do tej rudej, co na stołówce jadła schabowego i sos kapał jej po brodzie… Patrzyłam i myślałam tylko o jednym. Naprawdę tylko o jednym.', s: '#zagubione' },
+            { t: 'Spotted WAT', b: 'Na przerwie ktoś powiedział „mam ochotę na coś twardego i gorącego”. Myślałem, że o kawie. Okazało się, że o kawie. Byłem rozczarowany.', s: '#nocneZarcie' },
+            { t: 'Spotted WAT', b: 'Wyznanie wieczorne: Zamiast się uczyć do jutrzejszego kolosa, leżę i wyobrażam sobie jak by to było, gdyby ta ładna z pierwszego rzędu usiadła mi na twarzy. Sesja mnie zabija.', s: '#bud57 #karma' },
+            { t: 'Spotted WAT', b: 'Gdyby oceny na WAT były jak orgazmy – to ja ciągle jestem w fazie przedorgazmicznej.', s: '#poranneWokale' },
+            { t: 'Spotted WAT', b: 'Szukam w\u0142a\u015bciciela suszarki kt\u00f3ra dzia\u0142a jak silnik odrzutowy \u2014 akad. 4. Budzimy si\u0119 co noc my\u015bl\u0105c \u017ce to alarmTa goth dziewczyna z długimi czarnymi włosami i czerwoną szminką na matmie… Jak gryzie długopis, to mam wrażenie, że zaraz ugryzie coś zupełnie innego. I bardzo chętnie bym jej na to pozwolił.', s: '#cisza_nocna' },
+            { t: 'Spotted WAT', b: 'Ta goth dziewczyna z WEL, co zawsze ma czarne lakierowane paznokcie… Wyobrażam sobie te paznokcie na swoich plecach i od razu tracę wątek na laboratoriach.', s: '#s204 #kotki' },
+            { t: 'Spotted WAT', b: 'Ta goth z WEL w czarnych lateksowych legginsach…', s: '#bud57' },
+            { t: 'Spotted WAT', b: 'Profesjonalne „odstresowywanie” przed kolokwium z analizy. Goth styl, czarne lateksowe rękawiczki, kolczyk w języku. Cena: kawa + dyskrecja', s: '#sto\u0142\u00f3wka' },
             { t: 'Spotted WAT', b: 'Foki z logistyki w Twojej okolicy! [DIST km st\u0105d] Nie daj si\u0119 zaskoczy\u0107', s: '#WLO #foki', dist: true },
-            { t: 'Le\u015bnik poluje', b: 'Le\u015bnik ju\u017c na Ciebie poluje! PPS nie \u015bpi. Kup notatki p\u00f3ki czas', s: '#PPS #przetwarzanieSygnalow' },
-            { t: 'Ciupaga Premium', b: 'Ciupa poleca! Najlepsza ciupaga na rynku \u2014 wytnij pi\u0119\u0107 jedynek jednym ci\u0119ciem', s: '#ciupa #WAT' },
-            { t: 'TELEDZ m\u00f3wi:', b: 'TELEGANCKO! Kurs teledetekcji z rabatem -90%. Wygl\u0105daj jak spec', s: '#teledetekcja' },
-            { t: 'Spotted WAT', b: 'Dziekanat nieczynny. Znowu. Proponujemy przyj\u015b\u0107 we wtorek 11:00-11:15. Mo\u017ce akurat traficie', s: '#dziekanat #klasyk' },
-            { t: 'Spotted WAT', b: 'Kto zostawi\u0142 p\u00f3\u0142 kanapki w sali 106? To by\u0142o 3 tygodnie temu. Kanapka ewoluuje. Ma\u0142y ale stabilny ekosystem', s: '#bud100 #biologia' },
-            { t: 'Spotted WAT', b: 'Grupa wsparcia "Nieodporni na Analiz\u0119 Matematyczn\u0105" \u2014 spotkania co czwartek bud. 100. Wst\u0119p wolny, \u0142zy w\u0142asne', s: '#analiza #matma' },
+            { t: 'Le\u015bnik poluje', b: 'Le\u015bnik ju\u017c na Ciebie poluje!', s: '#PPS #przetwarzanieSygnalow' },
+            { t: 'Ciupaga Premium', b: 'Ciupa poleca! Najlepsza ciupaga na rynku', s: '#ciupa #WAT' },
+            { t: 'TELEDZ m\u00f3wi:', b: 'TELEGANCKO! Kurs z rabatem -90%. Rysuj jak spec', s: '#grafikainż' },
+            { t: 'Spotted WAT', b: 'Dziekanat nieczynny. Znowu. Proponujemy przyj\u015b\u0107 we wtorek 11:00-11:15. Mo\u017ce akurat traficie', s: '#dziekanat ' },
+            { t: 'Spotted WAT', b: '„Goth Nights w akademiku 3” – co piątek od 22:00. Muzyka darkwave, czerwone światło, zero staników. Wejście za butelkę wina albo dobre spojrzenie', s: '#bud100 #biologia' },
+            { t: 'Spotted WAT', b: 'Sprzedam duszę + dziewictwo (ponownie) w zamian za chłopaka, który podczas seksu będzie mi czytał skrypt z ukłądów analogowych niskim, mrocznym głosem.', s: '#UKA' },
         ];
+
 
         function getFunAd() {
             const ad = FUN_ADS_POOL[Math.floor(Math.random() * FUN_ADS_POOL.length)];
@@ -2020,7 +2466,7 @@
             { t: 'ZAROB 50000z\u0142 DZIENNIE', b: 'Wystarczy rzuci\u0107 studia na WAT! Ten prosty trik...', c: 'DOWIEDZ SI\u0118' },
             { t: 'WYKRYTO 37 WIRUS\u00d3W!', b: 'Tw\u00f3j laptop WCY jest zagro\u017cony! Kliknij aby naprawi\u0107!', c: 'SKANUJ TERAZ' },
             { t: 'Profesorowie NIENAWIDZ\u0104 tego triku!', b: 'Zdaj egzamin bez nauki w 24h dzi\u0119ki tej metodzie', c: 'SPRAWD\u0179' },
-            { t: 'iPhone 47 za 1z\u0142!', b: 'Zosta\u0142y 2 sztuki! Oferta wygasa za 0:03:22', c: 'KUP TERAZ' },
+            { t: 'Samsung S26 za 1z\u0142!', b: 'Zosta\u0142y 2 sztuki! Oferta wygasa za 0:03:22', c: 'KUP TERAZ Z KODEM SEX69' },
             { t: 'NOWY PLAN ZAJ\u0118\u0106 BEZ PONIEDZIA\u0141K\u00d3W', b: 'Rektor potwierdzi\u0142! Kliknij aby aktywowa\u0107 nowy plan', c: 'AKTYWUJ' },
             { t: 'Dziekanat OTWARTY 24/7!', b: 'Nowa reforma szkolnictwa - dziekanat non-stop!', c: 'SZCZEG\u00d3\u0141Y' },
             { t: 'DARMOWE OBIADY na sto\u0142\u00f3wce!', b: 'Wystarczy poda\u0107 ten kod przy kasie: ...', c: 'POKA\u017b KOD' },
