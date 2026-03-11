@@ -5,6 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plan Zajęć WAT</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f1117">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Plan WAT">
+    <link rel="apple-touch-icon" href="icons/icon.svg">
     <style>
         :root {
             --bg: #0f1117;
@@ -1851,7 +1857,7 @@
             WEL: { name: 'Wydz. Elektroniki', lato: 'https://plany.wel.wat.edu.pl/lato', zima: 'https://plany.wel.wat.edu.pl/zima' },
             WLO: { name: 'Wydz. Bezp. Logistyki i Zarzadzania', lato: 'https://wlo.wat.edu.pl/planzajec/letni', zima: 'https://wlo.wat.edu.pl/planzajec/zimowy' },
             WML: { name: 'Wydz. Mechatroniki, Uzbrojenia i Lotnictwa', lato: 'https://wml.wat.edu.pl/wp-content/uploads/rozklady_zajec/2024_sem_lato', zima: 'https://wml.wat.edu.pl/wp-content/uploads/rozklady_zajec/2024_sem_zima' },
-            IOE: { name: 'Instytut Optoelektroniki', lato: 'https://ioe.wat.edu.pl/plany/lato', zima: 'https://ioe.wat.edu.pl/plany/lato' },
+            IOE: { name: 'Instytut Optoelektroniki', lato: 'https://ioe.wat.edu.pl/plany/lato', zima: 'https://ioe.wat.edu.pl/plany/zima' },
             WTC: { name: 'Wydz. Nowych Technologii i Chemii', lato: 'https://www.wtc.wat.edu.pl/Plany', zima: 'https://www.wtc.wat.edu.pl/Plany' },
             WIM: { name: 'Wydz. Inzynierii Mechanicznej', lato: 'https://www.wim.wat.edu.pl/wp-content/uploads/rozklady/lato', zima: 'https://www.wim.wat.edu.pl/wp-content/uploads/rozklady/zima' }
         };
@@ -1897,7 +1903,7 @@
             }
         }
 
-        async function fetchPlanFromWAT(groupName, semester) {
+        async function fetchPlanFromWAT(groupName, semester, onStatus) {
             let planUrl;
 
             // Professor mode: use stored dept info
@@ -1917,11 +1923,15 @@
                 planUrl = baseUrl + '/' + groupName + '.htm';
             }
 
-            // Try all proxies in parallel — take first success
-            try {
-                return await Promise.any(CORS_PROXIES.map(p => fetchWithProxy(p, planUrl, 12000)));
-            } catch (e) {
-                throw new Error('Nie udalo sie pobrac planu przez żaden proxy. Sprawdz nazwe grupy lub zaladuj plik recznie.');
+            // Try proxies sequentially to give meaningful status feedback
+            const total = CORS_PROXIES.length;
+            for (let i = 0; i < total; i++) {
+                if (onStatus) onStatus(`Łączenie z serwerem${total > 1 ? ' (' + (i + 1) + '/' + total + ')' : ''}...`);
+                try {
+                    return await fetchWithProxy(CORS_PROXIES[i], planUrl, 12000);
+                } catch (e) {
+                    if (i === total - 1) throw new Error('Nie udało się pobrać planu przez żaden serwer proxy. Sprawdź nazwę grupy lub załaduj plik ręcznie.');
+                }
             }
         }
 
@@ -2215,7 +2225,7 @@
             const grid = buildVirtualGrid(table);
             if (grid.length < 10) throw new Error('Tabela za mala');
 
-            let year = 2026;
+            let year = (() => { try { const y = new Date().getFullYear(); return (y >= 2020 && y <= 2040) ? y : 2026; } catch { return 2026; } })();
             const bt = doc.body.textContent || '';
             const ym = bt.match(/(\d{4})\/(\d{4})/);
             if (ym) year = parseInt(ym[2]);
@@ -2976,7 +2986,7 @@
             document.getElementById('groupInput').focus();
             data = null;
             deactivateCursedMode();
-            window.history.replaceState({}, '', window.location.pathname);
+            window.history.pushState({}, '', window.location.pathname);
             document.title = 'Plan Zajec WAT';
             // Restart gif ads on the loader page
             startGifAds();
@@ -3193,19 +3203,19 @@
             errorEl.style.display = 'none';
             fetchBtn.disabled = true;
             fetchBtn.textContent = 'Pobieranie...';
-            status.textContent = 'Laczenie z serwerem WAT...';
+            status.textContent = 'Łączenie z serwerem WAT...';
 
             try {
-                const html = await fetchPlanFromWAT(group, semester);
+                const html = await fetchPlanFromWAT(group, semester, msg => { status.textContent = msg; });
                 status.textContent = 'Parsowanie planu...';
                 const d = parseScheduleHTML(html);
                 if (d.allClasses.length === 0) throw new Error('Plan jest pusty - sprawdz nazwe grupy');
 
-                // Update URL for sharing (without reload)
+                // Push a history entry so the browser back button returns to the loader
                 const newUrl = new URL(window.location);
                 newUrl.searchParams.set('group', group);
                 newUrl.searchParams.set('sem', semester);
-                window.history.replaceState({}, '', newUrl);
+                window.history.pushState({ group, sem: semester }, '', newUrl);
 
                 // Paywall check for non-whitelisted groups
                 if (!isGroupFree(group) && !isGroupUnlocked(group)) {
@@ -3666,6 +3676,23 @@
             stopGifAds();
             _origInit(d);
         };
+
+        // Browser back/forward button support
+        window.addEventListener('popstate', function (e) {
+            const state = e.state || {};
+            if (state.group) {
+                // Forward: reload this group
+                doFetch(state.group, state.sem || getDefaultSemester());
+            } else {
+                // Back: return to loader
+                if (data) goHome();
+            }
+        });
+
+        // Register service worker for PWA / home screen install
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(() => {});
+        }
     </script>
 </body>
 

@@ -1,0 +1,21 @@
+{
+  "name": "Plan Zajęć WAT",
+  "short_name": "Plan WAT",
+  "description": "Przeglądarka planu zajęć Wojskowej Akademii Technicznej",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0f1117",
+  "theme_color": "#0f1117",
+  "lang": "pl",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "utilities"],
+  "screenshots": []
+}
