@@ -1868,12 +1868,12 @@
         // IS_LOCAL = http://localhost or http://127.0.0.1 (NOT file://)
         const IS_LOCAL = location.protocol.startsWith('http') && ['localhost', '127.0.0.1'].includes(location.hostname);
         const CORS_PROXIES = [
-            // cors.eu.org is currently the most stable free proxy for WAT plans
-            url => 'https://cors.eu.org/' + url,
             url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
+            url => 'https://cors.eu.org/' + url,
+            url => 'https://proxy.corsfix.com/?' + encodeURIComponent(url),
+            url => 'https://api.cors.lol/?url=' + encodeURIComponent(url),
             url => 'https://corsproxy.org/?' + encodeURIComponent(url),
             url => 'https://thingproxy.freeboard.io/fetch/' + url,
-            url => 'https://api.cors.lol/?url=' + encodeURIComponent(url),
         ];
 
         function detectDepartment(groupName) {
@@ -1984,6 +1984,28 @@
         // PLAN LIST / AUTOCOMPLETE
         // ============================================================
         const planListCache = {};
+        const PLAN_LIST_STORAGE_PREFIX = 'planList_';
+        const PLAN_LIST_TTL = 12 * 60 * 60 * 1000; // 12 hours
+
+        function getCachedPlanList(cacheKey) {
+            try {
+                const raw = localStorage.getItem(PLAN_LIST_STORAGE_PREFIX + cacheKey);
+                if (!raw) return null;
+                const { data, ts } = JSON.parse(raw);
+                if (Date.now() - ts > PLAN_LIST_TTL) {
+                    localStorage.removeItem(PLAN_LIST_STORAGE_PREFIX + cacheKey);
+                    return null;
+                }
+                return data;
+            } catch { return null; }
+        }
+
+        function setCachedPlanList(cacheKey, data) {
+            try {
+                localStorage.setItem(PLAN_LIST_STORAGE_PREFIX + cacheKey, JSON.stringify({ data, ts: Date.now() }));
+            } catch { }
+        }
+
         let searchType = 'group'; // 'group' or 'professor'
 
         function detectDeptKey(input) {
@@ -1997,6 +2019,11 @@
         async function fetchPlanList(deptKey, semester) {
             const cacheKey = deptKey + '_' + semester;
             if (planListCache[cacheKey]) return planListCache[cacheKey];
+            const cached = getCachedPlanList(cacheKey);
+            if (cached) {
+                planListCache[cacheKey] = cached;
+                return cached;
+            }
             const dept = DEPARTMENTS[deptKey];
             if (!dept || !dept[semester]) return null;
             const baseUrl = dept[semester];
@@ -2042,14 +2069,18 @@
                     lower.includes('rate limit exceeded') ||
                     lower.includes('too many requests') ||
                     lower.includes('server-side requests are not allowed') ||
-                    lower.includes('hide.mn');
+                    lower.includes('hide.mn') ||
+                    lower.includes('access denied') ||
+                    lower.includes('403 forbidden') ||
+                    lower.includes('just a moment') ||
+                    lower.includes('cf-browser-verification');
             };
 
             const tryProxy = async (proxy, idx, url) => {
                 const proxyUrl = proxy(url);
                 console.log(`[fetchPlanList] Proxy ${idx} trying: ${proxyUrl}`);
                 const ctrl = new AbortController();
-                const timer = setTimeout(() => ctrl.abort(), 15000);
+                const timer = setTimeout(() => ctrl.abort(), 10000);
                 try {
                     const resp = await fetch(proxyUrl, { signal: ctrl.signal });
                     clearTimeout(timer);
@@ -2082,6 +2113,7 @@
                 try {
                     const result = await Promise.any(attempts);
                     planListCache[cacheKey] = result;
+                    setCachedPlanList(cacheKey, result);
                     return result;
                 } catch (e) {
                     if (attempt === 0) {
