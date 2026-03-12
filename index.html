@@ -1868,9 +1868,10 @@
         // IS_LOCAL = http://localhost or http://127.0.0.1 (NOT file://)
         const IS_LOCAL = location.protocol.startsWith('http') && ['localhost', '127.0.0.1'].includes(location.hostname);
         const CORS_PROXIES = [
-            url => 'https://proxy.corsfix.com/?' + encodeURIComponent(url),
-            url => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url),
-            url => 'https://cors.lol/?url=' + encodeURIComponent(url),
+            url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
+            url => 'https://corsproxy.org/?' + encodeURIComponent(url),
+            url => 'https://thingproxy.freeboard.io/fetch/' + url,
+            url => 'https://api.cors.lol/?url=' + encodeURIComponent(url),
         ];
 
         function detectDepartment(groupName) {
@@ -1897,6 +1898,7 @@
                 clearTimeout(timer);
                 if (!resp.ok) throw new Error('HTTP ' + resp.status);
                 const buf = await resp.arrayBuffer();
+                if (buf.byteLength < 50) throw new Error('Empty response (' + buf.byteLength + ' bytes)');
                 const html = new TextDecoder('windows-1250').decode(buf);
                 if (html.includes('<table') || html.includes('<TABLE')) return html;
                 throw new Error('Brak tabeli w odpowiedzi');
@@ -1926,14 +1928,20 @@
                 planUrl = baseUrl + '/' + groupName + '.htm';
             }
 
-            // Try all proxies in parallel for fastest response
-            if (onStatus) onStatus('Łączenie z serwerem...');
-            try {
-                return await Promise.any(
-                    CORS_PROXIES.map(proxy => fetchWithProxy(proxy, planUrl, 12000))
-                );
-            } catch (e) {
-                throw new Error('Nie udało się pobrać planu przez żaden serwer proxy. Sprawdź nazwę grupy lub załaduj plik ręcznie.');
+            // Try all proxies in parallel for fastest response, retry once on total failure
+            for (let attempt = 0; attempt < 2; attempt++) {
+                if (onStatus) onStatus(attempt === 0 ? 'Łączenie z serwerem...' : 'Ponawiam próbę...');
+                try {
+                    return await Promise.any(
+                        CORS_PROXIES.map(proxy => fetchWithProxy(proxy, planUrl, 20000))
+                    );
+                } catch (e) {
+                    if (attempt === 0) {
+                        await new Promise(r => setTimeout(r, 2000));
+                    } else {
+                        throw new Error('Nie udało się pobrać planu przez żaden serwer proxy. Sprawdź nazwę grupy lub załaduj plik ręcznie.');
+                    }
+                }
             }
         }
 
@@ -2029,12 +2037,13 @@
                 const proxyUrl = proxy(url);
                 console.log(`[fetchPlanList] Proxy ${idx} trying: ${proxyUrl}`);
                 const ctrl = new AbortController();
-                const timer = setTimeout(() => ctrl.abort(), 8000);
+                const timer = setTimeout(() => ctrl.abort(), 15000);
                 try {
                     const resp = await fetch(proxyUrl, { signal: ctrl.signal });
                     clearTimeout(timer);
                     if (!resp.ok) throw new Error('HTTP ' + resp.status);
                     const buf = await resp.arrayBuffer();
+                    if (buf.byteLength < 50) throw new Error('Empty response (' + buf.byteLength + ' bytes)');
                     const html = new TextDecoder('windows-1250').decode(buf);
                     console.log(`[fetchPlanList] Proxy ${idx} response length: ${html.length}, snippet: ${html.substring(0, 200)}`);
                     const result = parseHtml(html);
@@ -2048,22 +2057,29 @@
                 }
             };
 
-            // Try all proxies × all URLs in parallel for maximum speed
-            const attempts = [];
-            for (const url of urls) {
-                for (let i = 0; i < CORS_PROXIES.length; i++) {
-                    attempts.push(tryProxy(CORS_PROXIES[i], i, url));
+            // Try all proxies × all URLs in parallel for maximum speed, retry once on total failure
+            for (let attempt = 0; attempt < 2; attempt++) {
+                const attempts = [];
+                for (const url of urls) {
+                    for (let i = 0; i < CORS_PROXIES.length; i++) {
+                        attempts.push(tryProxy(CORS_PROXIES[i], i, url));
+                    }
                 }
-            }
 
-            try {
-                const result = await Promise.any(attempts);
-                planListCache[cacheKey] = result;
-                return result;
-            } catch (e) {
-                console.error('[fetchPlanList] All proxies failed:', e);
-                if (e.errors) e.errors.forEach((err, i) => console.error(`  Attempt ${i}:`, err.message));
-                return null;
+                try {
+                    const result = await Promise.any(attempts);
+                    planListCache[cacheKey] = result;
+                    return result;
+                } catch (e) {
+                    if (attempt === 0) {
+                        console.warn('[fetchPlanList] All proxies failed, retrying in 2s...');
+                        await new Promise(r => setTimeout(r, 2000));
+                    } else {
+                        console.error('[fetchPlanList] All proxies failed after retry:', e);
+                        if (e.errors) e.errors.forEach((err, i) => console.error(`  Attempt ${i}:`, err.message));
+                        return null;
+                    }
+                }
             }
         }
 
