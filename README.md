@@ -52,7 +52,7 @@ Then visit `http://localhost:8080`.
 
 ## How It Works
 
-Schedule files are hosted as `.htm` files on each faculty's web server. The app constructs the URL from the group name, then fetches it through a CORS proxy (`allorigins.win`, `codetabs.com`) since direct browser requests are blocked by cross-origin policy. The raw HTML is then parsed client-side to extract and render the timetable.
+Schedule files are hosted as `.htm` files on each faculty's web server. The app constructs the URL from the group name, then fetches it through a CORS proxy (`corsfix.com`, `codetabs.com`, `cors.lol`) since direct browser requests are blocked by cross-origin policy. The raw HTML is then parsed client-side to extract and render the timetable.
 
 ## License
 

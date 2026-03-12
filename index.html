@@ -1868,9 +1868,9 @@
         // IS_LOCAL = http://localhost or http://127.0.0.1 (NOT file://)
         const IS_LOCAL = location.protocol.startsWith('http') && ['localhost', '127.0.0.1'].includes(location.hostname);
         const CORS_PROXIES = [
-            url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
+            url => 'https://proxy.corsfix.com/?' + encodeURIComponent(url),
             url => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url),
-            url => 'https://corsproxy.io/?' + encodeURIComponent(url),
+            url => 'https://cors.lol/?url=' + encodeURIComponent(url),
         ];
 
         function detectDepartment(groupName) {
@@ -1926,15 +1926,14 @@
                 planUrl = baseUrl + '/' + groupName + '.htm';
             }
 
-            // Try proxies sequentially to give meaningful status feedback
-            const total = CORS_PROXIES.length;
-            for (let i = 0; i < total; i++) {
-                if (onStatus) onStatus(`Łączenie z serwerem${total > 1 ? ' (' + (i + 1) + '/' + total + ')' : ''}...`);
-                try {
-                    return await fetchWithProxy(CORS_PROXIES[i], planUrl, 12000);
-                } catch (e) {
-                    if (i === total - 1) throw new Error('Nie udało się pobrać planu przez żaden serwer proxy. Sprawdź nazwę grupy lub załaduj plik ręcznie.');
-                }
+            // Try all proxies in parallel for fastest response
+            if (onStatus) onStatus('Łączenie z serwerem...');
+            try {
+                return await Promise.any(
+                    CORS_PROXIES.map(proxy => fetchWithProxy(proxy, planUrl, 12000))
+                );
+            } catch (e) {
+                throw new Error('Nie udało się pobrać planu przez żaden serwer proxy. Sprawdź nazwę grupy lub załaduj plik ręcznie.');
             }
         }
 
@@ -1994,7 +1993,7 @@
 
             function parseHtml(html) {
                 const result = { groups: [], professors: [] };
-                if (html.includes('<data>')) {
+                if (html.includes('<data>') || html.includes('<gro') || html.includes('<lec')) {
                     const parseSec = (tag) => {
                         const items = [];
                         const idx = html.indexOf('<' + tag);
@@ -2022,12 +2021,15 @@
                 return result;
             }
 
-            // Try all proxies in parallel
-            const tryProxy = async (proxy, idx) => {
-                const proxyUrl = proxy(baseUrl + '/');
+            // Try fetching index.xml first (structured data, faster parsing),
+            // then fall back to HTML index page
+            const urls = [baseUrl + '/index.xml', baseUrl + '/'];
+
+            const tryProxy = async (proxy, idx, url) => {
+                const proxyUrl = proxy(url);
                 console.log(`[fetchPlanList] Proxy ${idx} trying: ${proxyUrl}`);
                 const ctrl = new AbortController();
-                const timer = setTimeout(() => ctrl.abort(), 10000);
+                const timer = setTimeout(() => ctrl.abort(), 8000);
                 try {
                     const resp = await fetch(proxyUrl, { signal: ctrl.signal });
                     clearTimeout(timer);
@@ -2046,13 +2048,21 @@
                 }
             };
 
+            // Try all proxies × all URLs in parallel for maximum speed
+            const attempts = [];
+            for (const url of urls) {
+                for (let i = 0; i < CORS_PROXIES.length; i++) {
+                    attempts.push(tryProxy(CORS_PROXIES[i], i, url));
+                }
+            }
+
             try {
-                const result = await Promise.any(CORS_PROXIES.map((p, i) => tryProxy(p, i)));
+                const result = await Promise.any(attempts);
                 planListCache[cacheKey] = result;
                 return result;
             } catch (e) {
                 console.error('[fetchPlanList] All proxies failed:', e);
-                if (e.errors) e.errors.forEach((err, i) => console.error(`  Proxy ${i}:`, err.message));
+                if (e.errors) e.errors.forEach((err, i) => console.error(`  Attempt ${i}:`, err.message));
                 return null;
             }
         }
