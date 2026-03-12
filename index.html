@@ -1868,6 +1868,8 @@
         // IS_LOCAL = http://localhost or http://127.0.0.1 (NOT file://)
         const IS_LOCAL = location.protocol.startsWith('http') && ['localhost', '127.0.0.1'].includes(location.hostname);
         const CORS_PROXIES = [
+            // cors.eu.org is currently the most stable free proxy for WAT plans
+            url => 'https://cors.eu.org/' + url,
             url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
             url => 'https://corsproxy.org/?' + encodeURIComponent(url),
             url => 'https://thingproxy.freeboard.io/fetch/' + url,
@@ -2033,6 +2035,16 @@
             // then fall back to HTML index page
             const urls = [baseUrl + '/index.xml', baseUrl + '/'];
 
+            const isProxyErrorResponse = (text) => {
+                const lower = text.toLowerCase();
+                return lower.includes('error code: 522') ||
+                    lower.includes('dns resolution failure') ||
+                    lower.includes('rate limit exceeded') ||
+                    lower.includes('too many requests') ||
+                    lower.includes('server-side requests are not allowed') ||
+                    lower.includes('hide.mn');
+            };
+
             const tryProxy = async (proxy, idx, url) => {
                 const proxyUrl = proxy(url);
                 console.log(`[fetchPlanList] Proxy ${idx} trying: ${proxyUrl}`);
@@ -2043,8 +2055,9 @@
                     clearTimeout(timer);
                     if (!resp.ok) throw new Error('HTTP ' + resp.status);
                     const buf = await resp.arrayBuffer();
-                    if (buf.byteLength < 50) throw new Error('Empty response (' + buf.byteLength + ' bytes)');
+                    if (buf.byteLength < 5) throw new Error('Empty response (' + buf.byteLength + ' bytes)');
                     const html = new TextDecoder('windows-1250').decode(buf);
+                    if (isProxyErrorResponse(html)) throw new Error('Proxy returned error page');
                     console.log(`[fetchPlanList] Proxy ${idx} response length: ${html.length}, snippet: ${html.substring(0, 200)}`);
                     const result = parseHtml(html);
                     console.log(`[fetchPlanList] Proxy ${idx} parsed: ${result.groups.length} groups, ${result.professors.length} professors`);
