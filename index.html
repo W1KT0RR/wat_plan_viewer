@@ -1868,6 +1868,7 @@
         // IS_LOCAL = http://localhost or http://127.0.0.1 (NOT file://)
         const IS_LOCAL = location.protocol.startsWith('http') && ['localhost', '127.0.0.1'].includes(location.hostname);
         const CORS_PROXIES = [
+            url => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url),
             url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
             url => 'https://cors.eu.org/' + url,
             url => 'https://proxy.corsfix.com/?' + encodeURIComponent(url),
